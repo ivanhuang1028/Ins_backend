@@ -1,0 +1,31 @@
+server:
+  port: 8098
+
+spring:
+  profiles: prod
+  datasource:
+    name: prodDB
+    url: jdbc:mysql://rm-wz9k55dp24zxw0xd3o.mysql.rds.aliyuncs.com:3306/userSystem?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: usercenter
+    password: I2nlx#a3Xil
+    driver-class-name: com.mysql.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat #监控统计插件
+    maxActive: 20  #最大连接池数
+    initialSize: 1  #初始化时建立物理连接的个数
+    maxWait: 60000  #获取连接时最大等待时间，单位毫秒
+    minIdle: 1  #最小连接池数量
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000  #连接保持空闲而不被驱逐的最小时间
+    validationQuery: select 'x'  #用来检测连接是否有效的sql
+    testWhileIdle: true  #如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+    testOnBorrow: false  #申请连接时执行validationQuery检测连接是否有效
+    testOnReturn: false  #归还连接时执行validationQuery检测连接是否有效
+    poolPreparedStatements: true  #是否缓存preparedStatement
+    maxOpenPreparedStatements: 20
+
+log:
+  path: /mnt/java/systemlog/nidus
+  level: debug
+
