@@ -18,8 +18,6 @@ import java.util.List;
 @Service("dictionaryService")
 public class DictionaryServiceImp<T> extends BaseServiceImp<T> implements DictionaryService<T> {
 
-    private static final String CACHE_KEY = "'dic'";
-
     @Override
     public DictionaryMapper<T> getMapper() {
         return (DictionaryMapper<T>) mapper;

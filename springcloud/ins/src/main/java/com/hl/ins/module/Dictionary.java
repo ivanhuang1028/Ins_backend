@@ -11,7 +11,7 @@ import java.util.Date;
 public class Dictionary implements Serializable {
 
     //字典标识
-    private Long dic_id;
+    private String dic_id;
 
     //字典名字
     private String dic_name;

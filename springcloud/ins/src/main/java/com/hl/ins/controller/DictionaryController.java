@@ -3,6 +3,7 @@ package com.hl.ins.controller;
 import com.github.pagehelper.PageHelper;
 import com.hl.common.constants.Result;
 import com.hl.common.constants.ResultCode;
+import com.hl.common.util.UUIDGenerator;
 import com.hl.ins.module.Dictionary;
 import com.hl.ins.service.DictionaryService;
 import com.hl.ins.util.SnowflakeIdWorker;
@@ -25,16 +26,13 @@ public class DictionaryController extends BaseController {
     @Autowired
     private DictionaryService<Dictionary> dictionaryService;
 
-    @Autowired
-    private SnowflakeIdWorker snowflakeIdWorker;
-
     @RequestMapping(value = "/dics", method = RequestMethod.POST)
     public Result insertAction(@RequestBody Dictionary dictionary) {
         if(StringUtils.isEmpty(dictionary.getDic_name())){
             return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 dic_name");
         }
         try {
-            dictionary.setDic_id(snowflakeIdWorker.nextId());
+            dictionary.setDic_id(UUIDGenerator.generate());
             dictionaryService.insert(dictionary);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -44,7 +42,7 @@ public class DictionaryController extends BaseController {
     }
 
     @RequestMapping(value = "/dic/{dic_id}", method = RequestMethod.POST)
-    public Result updateAction(@PathVariable("dic_id") Long dic_id, Dictionary dic) {
+    public Result updateAction(@PathVariable("dic_id") String dic_id, Dictionary dic) {
         try {
             dic.setDic_id(dic_id);
             dictionaryService.updateByPrimaryKey(dic);

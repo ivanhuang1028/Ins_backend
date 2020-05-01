@@ -1,7 +1,12 @@
 package com.hl.ins.controller;
 
 import com.hl.common.constants.Constants;
+import com.hl.common.util.JwtHelper;
+import com.hl.ins.properties.JwtConfig;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -12,15 +17,22 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public abstract class BaseController {
 
+    @Autowired
+    private JwtConfig jwtConfig;
+
     /**
      * 获取登录者的用户标识
      *
      * @param request
      * @return
      */
-//    public String getLoginerId(HttpServletRequest request) {
-//        return ((User) request.getAttribute(Constants.LOGINERKEY)).getUser_id();
-//    }
+    public String getLoginerId(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        Claims claims = JwtHelper.parseJWT(auth, jwtConfig.getEncodedKey());
+        String userid = (String)claims.get("user_id");
+        String user_name = (String)claims.get("user_name");
+        return userid;
+    }
 
 
     /**
@@ -29,27 +41,11 @@ public abstract class BaseController {
      * @param request
      * @return
      */
-//    public String getLoginerEname(HttpServletRequest request) {
-//        return getLoginer(request).getUser_ename();
-//    }
-
-    /**
-     * 获取登录者信息
-     *
-     * @param request
-     * @return
-     */
-//    public User getLoginer(HttpServletRequest request) {
-//        return (User) request.getAttribute(Constants.LOGINERKEY);
-//    }
-
-    /**
-     * 获取登录者的JWT信息
-     *
-     * @param request
-     * @return
-     */
-    public String getAuthorization(HttpServletRequest request) {
-        return (String) request.getAttribute(Constants.AUTHORIZATION);
+    public String getLoginerEname(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        Claims claims = JwtHelper.parseJWT(auth, jwtConfig.getEncodedKey());
+        String user_name = (String)claims.get("user_name");
+        return user_name;
     }
+
 }

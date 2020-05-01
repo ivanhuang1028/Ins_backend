@@ -21,8 +21,8 @@ pagehelper:
 # jwt
 jwt:
   encodedKey: L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg==
-  audience: ssc
-  issuer: pci
+  audience: ins
+  issuer: hl
   expDates: 7
 
 #自定义的属性和值例子

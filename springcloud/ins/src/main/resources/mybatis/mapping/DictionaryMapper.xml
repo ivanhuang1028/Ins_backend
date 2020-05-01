@@ -54,7 +54,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库列 -->
     <sql id="insertColumns">
         <trim suffix="" suffixOverrides=",">
-            <if test="dic_id != null">dic_id,</if>
+            <if test="dic_id != null and dic_id != ''">dic_id,</if>
             <if test="dic_name != null and dic_name != ''">dic_name,</if>
             <if test="dic_type != null and dic_type != ''">dic_type,</if>
             <if test="dic_key != null and dic_key != ''">dic_key,</if>
@@ -70,7 +70,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库值 -->
     <sql id="insertParams">
         <trim suffix="" suffixOverrides=",">
-            <if test="dic_id != null">#{dic_id},</if>
+            <if test="dic_id != null and dic_id != ''">#{dic_id,jdbcType=VARCHAR},</if>
             <if test="dic_name != null and dic_name != ''">#{dic_name,jdbcType=VARCHAR},</if>
             <if test="dic_type != null and dic_type != ''">#{dic_type,jdbcType=VARCHAR},</if>
             <if test="dic_key != null and dic_key != ''">#{dic_key,jdbcType=VARCHAR},</if>
@@ -87,7 +87,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <sql id="updateParams">
         <trim suffix="" suffixOverrides=",">
             <if test="dic_name != null">
-                dic_name=#{dic_name},
+                dic_name=#{dic_name,jdbcType=VARCHAR},
             </if>
             <if test="dic_type != null and dic_type != ''">
                 dic_type=#{dic_type,jdbcType=VARCHAR},
