@@ -266,6 +266,29 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="commentVO" type="com.hl.ins.vo.topiccomment.CommentVO">
+        <result column="comment_id" property="comment_id"/>
+        <result column="topic_id" property="topic_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="at_user_id" property="at_user_id"/>
+        <result column="at_user_name" property="at_user_name"/>
+        <result column="comment" property="comment"/>
+        <result column="createtime" property="createtime"/>
+    </resultMap>
+
+    <select id="comments" resultMap="commentVO">
+        SELECT ttc.comment_id, ttc.topic_id, ttc.user_id,
+        tu.user_name, tu.user_icon, ttc.at_user_id,
+        tu1.user_name AS 'at_user_name', ttc.comment, ttc.createtime
+        FROM t_topic_comment ttc
+        INNER JOIN t_user tu
+        ON (ttc.topic_id = #{topic_id} AND ttc.user_id = tu.user_id AND tu.user_black = 0)
+        LEFT JOIN t_user tu1
+        ON (ttc.at_user_id = tu1.user_id AND tu1.user_black = 0)
+        ORDER BY ttc.createtime DESC
+    </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

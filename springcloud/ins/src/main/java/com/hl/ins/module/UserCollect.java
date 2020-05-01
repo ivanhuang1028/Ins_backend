@@ -11,6 +11,8 @@ import java.util.Date;
 @Data
 public class UserCollect implements Serializable {
 
+    private String uc_id;
+
     //收藏帖子的用户标识
     private String user_id;
 
@@ -18,6 +20,6 @@ public class UserCollect implements Serializable {
     private String topic_id;
 
     //收藏时间
-    private String collecttime;
+    private Date collecttime;
 
 }
