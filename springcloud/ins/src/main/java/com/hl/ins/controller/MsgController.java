@@ -6,19 +6,21 @@ import com.hl.common.constants.ResultCode;
 import com.hl.common.util.DateUtil;
 import com.hl.common.util.DateUtils;
 import com.hl.common.util.UUIDGenerator;
-import com.hl.ins.module.Msg;
-import com.hl.ins.module.MsgSession;
-import com.hl.ins.module.TopicLike;
-import com.hl.ins.module.User;
-import com.hl.ins.service.MsgService;
-import com.hl.ins.service.MsgSessionService;
-import com.hl.ins.service.UserService;
+import com.hl.ins.module.*;
+import com.hl.ins.properties.ImagePath;
+import com.hl.ins.properties.OssConfig;
+import com.hl.ins.service.*;
 import com.hl.ins.util.Constants;
+import com.hl.ins.util.ImageBase64Converter;
+import com.hl.ins.util.OssUtils;
+import com.hl.ins.vo.msg.MsgVO;
 import com.hl.ins.vo.msg.MsgsUsersVO;
 import com.hl.ins.vo.page.PageVO;
 import com.hl.ins.vo.page.ResultsPageVO;
 import com.hl.ins.vo.topiccomment.CommentVO;
+import com.hl.ins.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -45,6 +48,18 @@ public class MsgController extends BaseController {
 
     @Autowired
     private UserService<User> userService;
+
+    @Autowired
+    private ImageService<Image> imageService;
+
+    @Autowired
+    private TopicService<Topic> topicService;
+
+    @Autowired
+    private ImagePath imagePath;
+
+    @Autowired
+    private OssConfig ossConfig;
 
     /**
      * 首页 9. 帖子转发操作接口
@@ -110,6 +125,136 @@ public class MsgController extends BaseController {
         }else {
             return user_id + "," + logierId;
         }
+    }
+
+    /**
+     * 私信 1. 私信详情接口
+     */
+    @RequestMapping(value = "/mess", method = RequestMethod.GET)
+    public Result mess(HttpServletRequest request, PageVO pageVO, String msg_user_id,
+                       String msg_time, int is_before) {
+        List<MsgVO> msgVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        if(is_before == 1){
+            msgVO = msgService.hisMess(getLoginerId(request), msg_user_id, msg_time);
+        }
+        if(is_before == 0){
+            msgVO = msgService.newMess(getLoginerId(request), msg_user_id, msg_time);
+        }
+
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(msgVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 私信 2. 私信读操作接口
+     */
+    @RequestMapping(value = "/msgs/read", method = RequestMethod.POST)
+    public Result msgsRead(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        if(StringUtils.isEmpty(paramMap.get("msg_user_id"))){
+            return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 msg_user_id");
+        }
+        msgService.updateMsgRead(this.getLoginerId(request), paramMap.get("msg_user_id"));
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 私信 3. 私信写操作接口
+     */
+    @RequestMapping(value = "/msgs/write", method = RequestMethod.POST)
+    public Result msgsWrite(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("msg_user_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 msg_user_id");
+            }
+            if(StringUtils.isEmpty(paramMap.get("msg_type"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 msg_type");
+            }
+            if(StringUtils.isEmpty(paramMap.get("msg_content"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 msg_content");
+            }
+
+            String logierId = getLoginerId(request);
+
+            Msg msg = new Msg();
+            msg.setMsg_id(UUIDGenerator.generate());
+            msg.setMsg_type(Integer.valueOf(paramMap.get("msg_type")));
+            msg.setUser_from(logierId);
+            msg.setUser_to(paramMap.get("msg_user_id"));
+            if(Constants.MSG_TYPE_CHARACTER == Integer.valueOf(paramMap.get("msg_type")) ){
+                msg.setMsg_content(paramMap.get("msg_content"));
+            }
+            if(Constants.MSG_TYPE_FACE == Integer.valueOf(paramMap.get("msg_type"))){
+                msg.setFace_content(paramMap.get("msg_content"));
+            }
+
+
+            if(Constants.MSG_TYPE_PIC == Integer.valueOf(paramMap.get("msg_type")) ||
+                    Constants.MSG_TYPE_VIDEO == Integer.valueOf(paramMap.get("msg_type")) ){
+                if(StringUtils.isEmpty(paramMap.get("msg_suffix"))){
+                    return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 msg_suffix");
+                }
+
+                //先保存在本地，再上传到OSS，保存数据库数据
+                // 保存在本地
+                String imagePath = this.imagePath.getLocalPicPath();
+                String imageNameLocal = msg.getMsg_id() + "_image." + paramMap.get("msg_suffix");
+                ImageBase64Converter.convertBase64ToFile(paramMap.get("msg_content"), imagePath, imageNameLocal);
+                // 上传到OSS
+                String imageName = "image." + paramMap.get("msg_suffix");
+                String image_remote_path = ossConfig.getMsgPath() + msg.getMsg_id() + "/" + imageName;
+                String image_remote_link =  OssUtils.uploadOssReturnUrl(ossConfig.getEndpoint(), ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret(),
+                        ossConfig.getBucketName(), imagePath + "/" + imageNameLocal, image_remote_path);
+                if(StringUtils.isEmpty(image_remote_link)){
+                    return Result.getFalseResult(ResultCode.FAILURE, "文件发送失败");
+                }
+                FileUtils.forceDelete(new File(imagePath + "/" + imageNameLocal));
+                // 保存数据库
+                //保存 image
+                Image image = new Image();
+                image.setImage_id(UUIDGenerator.generate());
+                image.setImage_user(logierId);
+                if(Constants.MSG_TYPE_PIC == Integer.valueOf(paramMap.get("msg_type"))){
+                    image.setImage_type(Constants.TOPIC_TYPE_PIC);
+                }
+                if(Constants.MSG_TYPE_VIDEO == Integer.valueOf(paramMap.get("msg_type"))){
+                    image.setImage_type(Constants.TOPIC_TYPE_VIDEO);
+                }
+                image.setImage_name(imageName);
+                image.setImage_remote_path(image_remote_path);
+                image.setImage_remote_link(image_remote_link);
+                image.setImage_uploadtime(new Date(System.currentTimeMillis()));
+                imageService.insert(image);
+
+                msg.setImage_id(image.getImage_id());
+            }
+            msg.setMsg_time(new Date(System.currentTimeMillis()));
+            msgService.insert(msg);
+
+            //更新会话时间
+            String userIds = getUserIds(logierId, paramMap.get("msg_user_id"));
+            MsgSession msTmp = new MsgSession();
+            msTmp.setUser_ids(userIds);
+            if(msgSessionService.selectByEqualT(msTmp) == null){
+                MsgSession ms = new MsgSession();
+                ms.setMs_id(UUIDGenerator.generate());
+                ms.setUser_ids(userIds);
+                ms.setSession_time(new Date(System.currentTimeMillis()));
+                msgSessionService.insert(ms);
+            }else{
+                msgSessionService.updateUserIds(userIds);
+            }
+
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
     }
 
 

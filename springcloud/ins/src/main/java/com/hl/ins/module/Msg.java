@@ -35,6 +35,9 @@ public class Msg implements Serializable {
     //图像标识
     private String image_id;
 
+    //1为已读，0为未读
+    private Integer is_read;
+
     //消息发送时间
     private Date msg_time;
 

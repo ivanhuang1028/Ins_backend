@@ -19,12 +19,15 @@ public class Constants {
 
     public static final String DIC_LABEL = "label";
 
+    public static final String TOPIC_TYPE_PIC = "PIC";
+    public static final String TOPIC_TYPE_VIDEO = "VIDEO";
+
     public static final List<String> TOPIC_TYPES = new ArrayList<>();
 
 
     static {
-        TOPIC_TYPES.add("PIC");
-        TOPIC_TYPES.add("VIDEO");
+        TOPIC_TYPES.add(TOPIC_TYPE_PIC);
+        TOPIC_TYPES.add(TOPIC_TYPE_VIDEO);
     }
 
 

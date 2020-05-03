@@ -24,6 +24,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="face_content" property="face_content"/>
         <result column="topic_id" property="topic_id"/>
         <result column="image_id" property="image_id"/>
+        <result column="is_read" property="is_read"/>
         <result column="msg_time" property="msg_time"/>
     </resultMap>
 
@@ -41,6 +42,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             face_content,
             topic_id,
             image_id,
+            is_read,
             msg_time
         </trim>
     </sql>
@@ -56,6 +58,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="face_content != null and face_content != ''">face_content,</if>
             <if test="topic_id != null and topic_id != ''">topic_id,</if>
             <if test="image_id != null and image_id != ''">image_id,</if>
+            is_read,
             msg_time,
         </trim>
     </sql>
@@ -71,6 +74,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="face_content != null and face_content != ''">#{face_content,jdbcType=VARCHAR},</if>
             <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
             <if test="image_id != null and image_id != ''">#{image_id,jdbcType=VARCHAR},</if>
+            0,
             now(),
         </trim>
     </sql>
@@ -99,7 +103,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="image_id != null and image_id != ''">
                 image_id=#{image_id,jdbcType=VARCHAR},
             </if>
-            msg_time=now(),
+            <if test="is_read != null and is_read != ''">
+                is_read=#{is_read,jdbcType=VARCHAR},
+            </if>
         </trim>
     </sql>
 
@@ -292,6 +298,84 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="msgVO" type="com.hl.ins.vo.msg.MsgVO">
+        <result column="msg_id" property="msg_id"/>
+        <result column="user_from" property="user_from"/>
+        <result column="user_to" property="user_to"/>
+        <result column="msg_type" property="msg_type"/>
+        <result column="msg_content" property="msg_content"/>
+        <result column="msg_link" property="msg_link"/>
+        <result column="msg_time" property="msg_time"/>
+        <result column="topic_id" property="topic_id"/>
+    </resultMap>
+
+    <select id="hisMess" resultMap="msgVO">
+        SELECT result1.msg_id, result1.user_from, result1.user_to, result1.msg_type,
+        CASE WHEN result1.msg_type = 1 THEN result1.msg_content
+        WHEN result1.msg_type = 2 THEN result1.face_content
+        WHEN result1.msg_type = 3 THEN tm.image_remote_link
+        WHEN result1.msg_type = 4 THEN tm.image_remote_link
+        END AS 'msg_content', result2.topic_user AS 'topic_user_id', result2.user_name AS 'topic_user_name', result2.user_icon AS 'topic_user_icon',
+        result2.topic_id, result2.topic_desc, result2.image_remote_link AS 'topic_image_remote_link'
+        FROM
+        (
+        SELECT * FROM t_msg tm
+        WHERE ((tm.user_from = #{loginerId} AND tm.user_to = #{msg_user_id})
+        OR (tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}))
+        AND tm.msg_time &lt;= #{history_msg_time}
+        ) result1
+        LEFT JOIN t_image tm
+        ON (result1.image_id = tm.image_id)
+        LEFT JOIN (
+        SELECT tp.topic_user, tu.user_name, tu.user_icon,
+        tp.topic_id, tp.topic_desc, ti.image_remote_link
+        FROM t_topic tp
+        INNER JOIN t_user tu
+        ON (tp.topic_user = tu.user_id)
+        INNER JOIN t_topic_images tti
+        ON (tp.topic_id = tti.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ) result2
+        ON (result1.topic_id = result2.topic_id)
+        ORDER BY result1.msg_time DESC
+    </select>
+
+    <select id="newMess" resultMap="msgVO">
+        SELECT result1.msg_id, result1.user_from, result1.user_to, result1.msg_type,
+        CASE WHEN result1.msg_type = 1 THEN result1.msg_content
+        WHEN result1.msg_type = 2 THEN result1.face_content
+        WHEN result1.msg_type = 3 THEN tm.image_remote_link
+        WHEN result1.msg_type = 4 THEN tm.image_remote_link
+        END AS 'msg_content', result2.topic_user AS 'topic_user_id', result2.user_name AS 'topic_user_name', result2.user_icon AS 'topic_user_icon',
+        result2.topic_id, result2.topic_desc, result2.image_remote_link AS 'topic_image_remote_link'
+        FROM
+        (
+        SELECT * FROM t_msg tm
+        WHERE ((tm.user_from = #{loginerId} AND tm.user_to = #{msg_user_id})
+        OR (tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}))
+        AND tm.msg_time &gt; #{new_msg_time}
+        ) result1
+        LEFT JOIN t_image tm
+        ON (result1.image_id = tm.image_id)
+        LEFT JOIN (
+        SELECT tp.topic_user, tu.user_name, tu.user_icon,
+        tp.topic_id, tp.topic_desc, ti.image_remote_link
+        FROM t_topic tp
+        INNER JOIN t_user tu
+        ON (tp.topic_user = tu.user_id)
+        INNER JOIN t_topic_images tti
+        ON (tp.topic_id = tti.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ) result2
+        ON (result1.topic_id = result2.topic_id)
+        ORDER BY result1.msg_time
+    </select>
+
+    <update id="updateMsgRead">
+        UPDATE t_msg tm SET tm.is_read = 1 WHERE tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}
+    </update>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

@@ -13,4 +13,5 @@ public class OssConfig {
     private String bucketName;
     private String endpoint;
     private String path;
+    private String msgPath;
 }

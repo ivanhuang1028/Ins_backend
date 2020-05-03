@@ -40,3 +40,4 @@ oss:
   bucketName: instranger
   endpoint: http://oss-cn-shenzhen.aliyuncs.com
   path: user/
+  msgPath: msg/

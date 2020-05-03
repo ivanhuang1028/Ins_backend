@@ -306,6 +306,13 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY td.dic_seq
     </select>
 
+    <select id="queryUserLabels" resultMap="dicVO">
+        SELECT td.dic_id, td.dic_value FROM t_user_label tul
+        INNER JOIN t_dictionary td
+        ON (tul.dic_id = td.dic_id AND tul.user_id = #{user_id} )
+        ORDER BY td.dic_seq
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

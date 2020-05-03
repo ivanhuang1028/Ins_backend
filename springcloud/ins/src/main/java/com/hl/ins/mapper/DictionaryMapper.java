@@ -14,4 +14,6 @@ public interface DictionaryMapper<T> extends BaseMapper<T> {
 
     List<DicVO> queryByName(@Param("dic_name") String dic_name);
 
+    List<DicVO> queryUserLabels(@Param("user_id") String user_id);
+
 }

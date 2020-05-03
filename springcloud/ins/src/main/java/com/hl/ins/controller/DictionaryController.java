@@ -2,17 +2,13 @@ package com.hl.ins.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.hl.common.constants.Result;
-import com.hl.common.constants.ResultCode;
-import com.hl.common.util.UUIDGenerator;
 import com.hl.ins.module.Dictionary;
 import com.hl.ins.service.DictionaryService;
 import com.hl.ins.util.Constants;
 import com.hl.ins.vo.dic.DicVO;
-import com.hl.ins.vo.msg.MsgsUsersVO;
 import com.hl.ins.vo.page.PageVO;
 import com.hl.ins.vo.page.ResultsPageVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;

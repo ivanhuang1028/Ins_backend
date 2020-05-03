@@ -427,6 +427,30 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY tu.createtime DESC
     </select>
 
+    <resultMap id="userInfoVO" type="com.hl.ins.vo.user.UserInfoVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_desc" property="user_desc"/>
+        <result column="user_gender" property="user_gender"/>
+        <result column="user_age" property="user_age"/>
+        <result column="user_region" property="user_region"/>
+        <result column="user_labels" property="user_labels"/>
+        <result column="user_topic_num" property="user_topic_num"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_focused_num" property="user_focused_num"/>
+        <result column="user_focus_num" property="user_focus_num"/>
+    </resultMap>
+
+    <select id="usersInfo" resultMap="userInfoVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tu.user_gender, TIMESTAMPDIFF(YEAR, tu.user_birthday, CURDATE()) AS 'user_age',
+        tu.user_region, (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = #{user_id} AND tt.is_valid = 1 ) AS 'user_topic_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_to = #{user_id} ) AS 'user_focused_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_from = #{user_id} ) AS 'user_focus_num'
+        FROM t_user tu
+        WHERE tu.user_id = #{user_id}
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

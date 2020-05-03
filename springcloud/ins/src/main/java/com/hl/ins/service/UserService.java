@@ -1,6 +1,7 @@
 package com.hl.ins.service;
 
 import com.hl.ins.mapper.UserMapper;
+import com.hl.ins.vo.user.UserInfoVO;
 import com.hl.ins.vo.user.UserVO;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserService<T> extends BaseService<T>, UserMapper<T> {
     List<UserVO> usersLabel(String loginerId, List<String> labelIds);
 
     List<UserVO> usersRegion(String loginerId, String key);
+
+    UserInfoVO usersInfo(String user_id);
 }
