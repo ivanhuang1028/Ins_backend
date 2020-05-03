@@ -14,6 +14,9 @@ public class Topic implements Serializable {
     //帖子标识
     private String topic_id;
 
+    //帖子类型
+    private String topic_type;
+
     //帖子说明
     private String topic_desc;
 
@@ -25,6 +28,9 @@ public class Topic implements Serializable {
 
     //帖子艾特的用户标识，用逗号隔开
     private String topic_at;
+
+    //帖子标签，多个，用逗号隔开
+    private String topic_labels;
 
     //帖子创建时间
     private Date topic_createtime;

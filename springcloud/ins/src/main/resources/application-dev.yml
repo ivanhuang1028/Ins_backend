@@ -29,8 +29,14 @@ log:
   path: /tool/mytomcats/systemlog/ssc
   level: debug
 
-configProperties:
-  tempLocalDir_upload: D:/upload/
-  localProPicPath: /mnt/ssc/
-  ftpPathPrefix: D:/upload/
-  localNginxProPicPath: /images/
+# 图像本地临时存放根目录
+image-path:
+  localPicPath: D:\\upload
+
+# OSS 配置
+oss:
+  accessKeyId: LTAI4FxJ7pVx1QwWyUP77k3A
+  accessKeySecret: v1dPkbzlnJYiAVzbvywkjbqQgbj85R
+  bucketName: instranger
+  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+  path: user/

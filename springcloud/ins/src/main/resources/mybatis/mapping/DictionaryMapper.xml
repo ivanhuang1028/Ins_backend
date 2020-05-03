@@ -296,13 +296,14 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
-    <select id="selectByName" resultMap="dictionaryResult">
-        select
-        <include refid="tableColumns"/>
-        from t_dictionary
-        where dic_name=#{name}
-        AND isvalid=1
-        ORDER BY dic_seq
+    <resultMap id="dicVO" type="com.hl.ins.vo.dic.DicVO">
+        <result column="dic_id" property="dic_id"/>
+        <result column="dic_value" property="dic_value"/>
+    </resultMap>
+
+    <select id="queryByName" resultMap="dicVO">
+        SELECT td.dic_id, td.dic_value FROM t_dictionary td WHERE td.dic_name = #{dic_name}
+        ORDER BY td.dic_seq
     </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->

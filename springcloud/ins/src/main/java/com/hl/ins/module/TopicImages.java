@@ -11,6 +11,9 @@ import java.util.Date;
 @Data
 public class TopicImages implements Serializable {
 
+    //标识
+    private String ti_id;
+
     //帖子标识
     private String topic_id;
 

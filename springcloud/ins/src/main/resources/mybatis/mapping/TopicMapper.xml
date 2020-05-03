@@ -17,10 +17,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <resultMap type="com.hl.ins.module.Topic" id="topicResult">
         <result column="topic_id" property="topic_id"/>
+        <result column="topic_type" property="topic_type"/>
         <result column="topic_desc" property="topic_desc"/>
         <result column="topic_location" property="topic_location"/>
         <result column="topic_user" property="topic_user"/>
         <result column="topic_at" property="topic_at"/>
+        <result column="topic_labels" property="topic_labels"/>
         <result column="topic_createtime" property="topic_createtime"/>
         <result column="is_recommend" property="is_recommend"/>
         <result column="recommend_time" property="recommend_time"/>
@@ -34,10 +36,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <sql id="tableColumns">
         <trim>
             topic_id,
+            topic_type,
             topic_desc,
             topic_location,
             topic_user,
             topic_at,
+            topic_labels,
             topic_createtime,
             is_recommend,
             recommend_time,
@@ -49,10 +53,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <sql id="insertColumns">
         <trim suffix="" suffixOverrides=",">
             <if test="topic_id != null and topic_id != ''">topic_id,</if>
+            <if test="topic_type != null and topic_type != ''">topic_type,</if>
             <if test="topic_desc != null and topic_desc != ''">topic_desc,</if>
             <if test="topic_location != null and topic_location != ''">topic_location,</if>
             <if test="topic_user != null and topic_user != '' ">topic_user,</if>
             <if test="topic_at != null and topic_at != ''">topic_at,</if>
+            <if test="topic_labels != null and topic_labels != ''">topic_labels,</if>
             topic_createtime,
             <if test="is_recommend != null ">is_recommend,</if>
             <if test="recommend_time != null ">recommend_time,</if>
@@ -64,10 +70,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <sql id="insertParams">
         <trim suffix="" suffixOverrides=",">
             <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
+            <if test="topic_type != null and topic_type != ''">#{topic_type,jdbcType=VARCHAR},</if>
             <if test="topic_desc != null and topic_desc != ''">#{topic_desc,jdbcType=VARCHAR},</if>
             <if test="topic_location != null and topic_location != ''">#{topic_location,jdbcType=VARCHAR},</if>
             <if test="topic_user != null and topic_user != ''">#{topic_user},</if>
             <if test="topic_at != null and topic_at != ''">#{topic_at,jdbcType=VARCHAR},</if>
+            <if test="topic_labels != null and topic_labels != ''">#{topic_labels,jdbcType=VARCHAR},</if>
             now(),
             <if test="is_recommend != null ">#{is_recommend},</if>
             <if test="recommend_time != null and recommend_time != ''">#{recommend_time,jdbcType=VARCHAR},</if>
@@ -81,6 +89,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="topic_desc != null">
                 topic_desc=#{topic_desc,jdbcType=VARCHAR},
             </if>
+            <if test="topic_type != null">
+                topic_type=#{topic_type,jdbcType=VARCHAR},
+            </if>
             <if test="topic_location != null and topic_location != ''">
                 topic_location=#{topic_location,jdbcType=VARCHAR},
             </if>
@@ -89,6 +100,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             </if>
             <if test="topic_at != null and topic_at != ''">
                 topic_at=#{topic_at,jdbcType=VARCHAR},
+            </if>
+            <if test="topic_labels != null and topic_labels != ''">
+                topic_labels=#{topic_labels,jdbcType=VARCHAR},
             </if>
             topic_createtime=now(),
             <if test="is_recommend != null ">
@@ -110,6 +124,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 <if test="t.topic_desc != null and t.topic_desc != '' ">and topic_desc like
                     concat('%',#{t.topic_desc},'%')
                 </if>
+                <if test="t.topic_type != null and t.topic_type != '' ">and topic_type like
+                    concat('%',#{t.topic_type},'%')
+                </if>
                 <if test="t.topic_location != null   and t.topic_location != '' ">and topic_location like
                     concat('%',#{t.topic_location},'%')
                 </if>
@@ -118,6 +135,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.topic_at != null   and t.topic_at != '' ">and topic_at like
                     concat('%',#{t.topic_at},'%')
+                </if>
+                <if test="t.topic_labels != null   and t.topic_labels != '' ">and topic_labels like
+                    concat('%',#{t.topic_labels},'%')
                 </if>
                 <if test="t.topic_createtime != null  ">and topic_createtime like
                     concat('%',#{t.topic_createtime},'%')
@@ -139,6 +159,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 <if test="t.topic_id != null  and t.topic_id != '' ">and topic_id =
                     #{t.topic_id}
                 </if>
+                <if test="t.topic_type != null  and t.topic_type != '' ">and topic_type =
+                    #{t.topic_type}
+                </if>
                 <if test="t.topic_desc != null  and t.topic_desc != '' ">and topic_desc =
                     #{t.topic_desc}
                 </if>
@@ -150,6 +173,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.topic_at != null  and t.topic_at != ''  ">and topic_at =
                     #{t.topic_at}
+                </if>
+                <if test="t.topic_labels != null  and t.topic_labels != ''  ">and topic_labels =
+                    #{t.topic_labels}
                 </if>
                 <if test="t.topic_createtime != null  ">and topic_createtime =
                     #{t.topic_createtime}
@@ -334,6 +360,72 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         INNER JOIN t_image ti
         ON (tti.topic_id = #{topic_id} AND tti.image_id = ti.image_id )
         ORDER BY tti.image_seq
+    </select>
+
+    <select id="countTopicsVideo" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_topic tt
+        INNER JOIN t_topic_images tti
+        ON (tt.topic_id = tti.topic_id
+             AND tt.is_valid = 1
+             AND tt.topic_type = 'VIDEO'
+            <if test="dic_id != null  and dic_id != ''  ">
+                AND tt.topic_labels LIKE concat('%',#{dic_id},'%')
+            </if>
+        )
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id )
+    </select>
+
+    <resultMap id="topicsVideoVO" type="com.hl.ins.vo.topic.TopicsVideoVO">
+        <result column="topic_id" property="topic_id"/>
+        <result column="image_id" property="image_id"/>
+        <result column="image_remote_link" property="image_remote_link"/>
+    </resultMap>
+
+    <select id="topicsVideo" resultMap="topicsVideoVO">
+        SELECT tt.topic_id, ti.image_id, ti.image_remote_link FROM t_topic tt
+        INNER JOIN t_topic_images tti
+        ON (tt.topic_id = tti.topic_id
+            AND tt.is_valid = 1
+            AND tt.topic_type = 'VIDEO'
+            <if test="dic_id != null  and dic_id != ''  ">
+                AND tt.topic_labels LIKE concat('%',#{dic_id},'%')
+            </if>
+        )
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id )
+        ORDER BY tt.is_recommend DESC, tt.recommend_time DESC, tt.topic_createtime DESC
+        LIMIT ${ran}, ${video_num}
+    </select>
+
+    <select id="countTopicsPic" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_topic tt
+        INNER JOIN t_topic_images tti
+        ON (tt.topic_id = tti.topic_id
+        AND tt.is_valid = 1
+        AND tt.topic_type = 'PIC'
+        <if test="dic_id != null  and dic_id != ''  ">
+            AND tt.topic_labels LIKE concat('%',#{dic_id},'%')
+        </if>
+        )
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id AND ti.image_name LIKE 'image1.%')
+    </select>
+
+    <select id="topicsPic" resultMap="topicsVideoVO">
+        SELECT tt.topic_id, ti.image_id, ti.image_remote_link FROM t_topic tt
+        INNER JOIN t_topic_images tti
+        ON (tt.topic_id = tti.topic_id
+        AND tt.is_valid = 1
+        AND tt.topic_type = 'PIC'
+        <if test="dic_id != null  and dic_id != ''  ">
+            AND tt.topic_labels LIKE concat('%',#{dic_id},'%')
+        </if>
+        )
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id AND ti.image_name LIKE 'image1.%')
+        ORDER BY tt.is_recommend DESC, tt.recommend_time DESC, tt.topic_createtime DESC
+        LIMIT ${ran}, ${pic_num}
     </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->

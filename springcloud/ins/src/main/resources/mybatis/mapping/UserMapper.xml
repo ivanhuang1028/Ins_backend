@@ -343,6 +343,89 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
+    <select id="isBefore" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_user tu
+        INNER JOIN t_user tu1
+        ON (tu.user_id = #{logierId}
+        AND tu1.user_id = #{user_id}
+        AND tu.createtime &lt;= tu1.createtime)
+    </select>
+
+    <resultMap id="userVO" type="com.hl.ins.vo.user.UserVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="focus_status" property="focus_status"/>
+    </resultMap>
+
+    <select id="focusTos" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+             ELSE 1
+        END AS 'focus_status'
+         FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_name LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
+    <select id="users" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_name LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.createtime DESC
+    </select>
+
+    <select id="usersLabel" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+             ELSE 1
+        END AS 'focus_status'
+         FROM t_user tu
+        INNER JOIN (
+           SELECT DISTINCT tu1.user_id FROM t_user tu1
+           INNER JOIN t_user_label tul
+           ON (tu1.user_id = tul.user_id
+            <if test="labelIds !=null and labelIds.size!=0">
+                AND tul.dic_id IN
+                <foreach collection="labelIds" item="id" separator="," close=")" open="(" index="index">
+                    #{id}
+                </foreach>
+            </if>
+           AND tu1.user_black = 0)
+        ) result1
+        ON (tu.user_id = result1.user_id)
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId})
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
+    <select id="usersRegion" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId})
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_region LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.createtime DESC
+    </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

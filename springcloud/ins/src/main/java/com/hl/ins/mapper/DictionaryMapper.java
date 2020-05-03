@@ -1,6 +1,7 @@
 package com.hl.ins.mapper;
 
 import com.hl.ins.module.Dictionary;
+import com.hl.ins.vo.dic.DicVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @Mapper
 public interface DictionaryMapper<T> extends BaseMapper<T> {
-    List<Dictionary> selectByName(@Param("name") String name);
+
+    List<DicVO> queryByName(@Param("dic_name") String dic_name);
 
 }

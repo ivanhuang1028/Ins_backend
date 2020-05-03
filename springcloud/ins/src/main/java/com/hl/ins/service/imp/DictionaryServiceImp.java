@@ -5,6 +5,7 @@ import com.hl.ins.mapper.DictionaryMapper;
 import com.hl.ins.module.Dictionary;
 import com.hl.ins.service.DictionaryService;
 import com.hl.ins.service.imp.BaseServiceImp;
+import com.hl.ins.vo.dic.DicVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,9 +30,9 @@ public class DictionaryServiceImp<T> extends BaseServiceImp<T> implements Dictio
         super.setMapper(mapper);
     }
 
-    @Override
-    public List<Dictionary> selectByName(String name) {
-        return getMapper().selectByName(name);
-    }
 
+    @Override
+    public List<DicVO> queryByName(String dic_name) {
+        return getMapper().queryByName(dic_name);
+    }
 }
