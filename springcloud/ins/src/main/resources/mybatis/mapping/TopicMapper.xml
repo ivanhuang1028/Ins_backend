@@ -21,7 +21,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="topic_desc" property="topic_desc"/>
         <result column="topic_location" property="topic_location"/>
         <result column="topic_user" property="topic_user"/>
-        <result column="topic_at" property="topic_at"/>
         <result column="topic_labels" property="topic_labels"/>
         <result column="topic_createtime" property="topic_createtime"/>
         <result column="is_recommend" property="is_recommend"/>
@@ -40,7 +39,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             topic_desc,
             topic_location,
             topic_user,
-            topic_at,
             topic_labels,
             topic_createtime,
             is_recommend,
@@ -57,7 +55,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="topic_desc != null and topic_desc != ''">topic_desc,</if>
             <if test="topic_location != null and topic_location != ''">topic_location,</if>
             <if test="topic_user != null and topic_user != '' ">topic_user,</if>
-            <if test="topic_at != null and topic_at != ''">topic_at,</if>
             <if test="topic_labels != null and topic_labels != ''">topic_labels,</if>
             topic_createtime,
             <if test="is_recommend != null ">is_recommend,</if>
@@ -74,7 +71,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="topic_desc != null and topic_desc != ''">#{topic_desc,jdbcType=VARCHAR},</if>
             <if test="topic_location != null and topic_location != ''">#{topic_location,jdbcType=VARCHAR},</if>
             <if test="topic_user != null and topic_user != ''">#{topic_user},</if>
-            <if test="topic_at != null and topic_at != ''">#{topic_at,jdbcType=VARCHAR},</if>
             <if test="topic_labels != null and topic_labels != ''">#{topic_labels,jdbcType=VARCHAR},</if>
             now(),
             <if test="is_recommend != null ">#{is_recommend},</if>
@@ -97,9 +93,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             </if>
             <if test="topic_user != null ">
                 topic_user=#{topic_user},
-            </if>
-            <if test="topic_at != null and topic_at != ''">
-                topic_at=#{topic_at,jdbcType=VARCHAR},
             </if>
             <if test="topic_labels != null and topic_labels != ''">
                 topic_labels=#{topic_labels,jdbcType=VARCHAR},
@@ -132,9 +125,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.topic_user != null and t.topic_user != '' ">and topic_user like
                     concat('%',#{t.topic_user},'%')
-                </if>
-                <if test="t.topic_at != null   and t.topic_at != '' ">and topic_at like
-                    concat('%',#{t.topic_at},'%')
                 </if>
                 <if test="t.topic_labels != null   and t.topic_labels != '' ">and topic_labels like
                     concat('%',#{t.topic_labels},'%')
@@ -170,9 +160,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.topic_user != null  and t.topic_user != ''  ">and topic_user =
                     #{t.topic_user}
-                </if>
-                <if test="t.topic_at != null  and t.topic_at != ''  ">and topic_at =
-                    #{t.topic_at}
                 </if>
                 <if test="t.topic_labels != null  and t.topic_labels != ''  ">and topic_labels =
                     #{t.topic_labels}
@@ -467,6 +454,10 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ON (tt.topic_id = tuc.topic_id AND tuc.user_id = #{loginerId})
         ORDER BY tt.topic_createtime desc
     </select>
+
+    <update id="topicAtRead">
+        UPDATE t_topic_at SET is_read = 1 WHERE topic_id = #{topic_id} AND user_id = #{loginerId}
+    </update>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

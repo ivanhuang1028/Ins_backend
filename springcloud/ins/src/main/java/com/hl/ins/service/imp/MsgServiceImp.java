@@ -3,6 +3,7 @@ package com.hl.ins.service.imp;
 import com.hl.ins.mapper.BaseMapper;
 import com.hl.ins.mapper.MsgMapper;
 import com.hl.ins.service.MsgService;
+import com.hl.ins.vo.msg.MsgActionVO;
 import com.hl.ins.vo.msg.MsgVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,30 @@ public class MsgServiceImp<T> extends BaseServiceImp<T> implements MsgService<T>
     @Override
     public void updateMsgRead(String loginerId, String msg_user_id) {
         getMapper().updateMsgRead(loginerId, msg_user_id);
+    }
+
+    @Override
+    public List<MsgActionVO> msgsAction(String loginerId) {
+        return getMapper().msgsAction(loginerId);
+    }
+
+    @Override
+    public List<MsgActionVO> msgsAction1(String loginerId) {
+        return getMapper().msgsAction1(loginerId);
+    }
+
+    @Override
+    public List<MsgActionVO> msgsAction2(String loginerId) {
+        return getMapper().msgsAction2(loginerId);
+    }
+
+    @Override
+    public List<MsgActionVO> msgsAction3(String loginerId) {
+        return getMapper().msgsAction3(loginerId);
+    }
+
+    @Override
+    public List<MsgActionVO> msgsAction4(String loginerId) {
+        return getMapper().msgsAction4(loginerId);
     }
 }

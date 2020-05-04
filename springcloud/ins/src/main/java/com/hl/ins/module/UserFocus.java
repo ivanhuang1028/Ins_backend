@@ -23,6 +23,9 @@ public class UserFocus implements Serializable {
     //关注时间
     private Date focus_time;
 
+    //留意此关注人的时间
+    private Date read_time;
+
     //是否已读
     private Integer is_read;
 

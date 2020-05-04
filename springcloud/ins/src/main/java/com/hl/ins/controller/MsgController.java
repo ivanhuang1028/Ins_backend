@@ -13,6 +13,7 @@ import com.hl.ins.service.*;
 import com.hl.ins.util.Constants;
 import com.hl.ins.util.ImageBase64Converter;
 import com.hl.ins.util.OssUtils;
+import com.hl.ins.vo.msg.MsgActionVO;
 import com.hl.ins.vo.msg.MsgVO;
 import com.hl.ins.vo.msg.MsgsUsersVO;
 import com.hl.ins.vo.page.PageVO;
@@ -256,6 +257,38 @@ public class MsgController extends BaseController {
         }
         return Result.getSuccResult();
     }
+
+    /**
+     * 动态消息 1. 动态消息列表接口
+     */
+    @RequestMapping(value = "/msgs/action", method = RequestMethod.GET)
+    public Result msgsAction(HttpServletRequest request, PageVO pageVO, String action_type) {
+        List<MsgActionVO> msgActionVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        if(Integer.valueOf(action_type) == 0){
+            msgActionVO = msgService.msgsAction(this.getLoginerId(request));
+        }
+        if(Integer.valueOf(action_type) == 1) {
+            msgActionVO = msgService.msgsAction1(this.getLoginerId(request));
+        }
+        if(Integer.valueOf(action_type) == 2) {
+            msgActionVO = msgService.msgsAction2(this.getLoginerId(request));
+        }
+        if(Integer.valueOf(action_type) == 3) {
+            msgActionVO = msgService.msgsAction3(this.getLoginerId(request));
+        }
+        if(Integer.valueOf(action_type) == 4) {
+            msgActionVO = msgService.msgsAction4(this.getLoginerId(request));
+        }
+
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(msgActionVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
 
 
 }

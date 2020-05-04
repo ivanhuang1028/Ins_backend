@@ -13,30 +13,24 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     &quot;       "
   <![CDATA[ 这里写你的SQL或者符号 ]]> 
  -->
-<mapper namespace="com.hl.ins.mapper.TopicCommentMapper">
+<mapper namespace="com.hl.ins.mapper.TopicAtMapper">
 
-    <resultMap type="com.hl.ins.module.TopicComment" id="topicCommentResult">
-        <result column="comment_id" property="comment_id"/>
+    <resultMap type="com.hl.ins.module.TopicAt" id="topicAtResult">
+        <result column="ta_id" property="ta_id"/>
         <result column="topic_id" property="topic_id"/>
         <result column="user_id" property="user_id"/>
-        <result column="at_user_id" property="at_user_id"/>
-        <result column="comment" property="comment"/>
-        <result column="createtime" property="createtime"/>
         <result column="is_read" property="is_read"/>
     </resultMap>
 
     <sql id="table">
-        t_topic_comment
+        t_topic_at
     </sql>
 
     <sql id="tableColumns">
         <trim>
-            comment_id,
+            ta_id,
             topic_id,
             user_id,
-            at_user_id,
-            comment,
-            createtime,
             is_read
         </trim>
     </sql>
@@ -44,12 +38,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库列 -->
     <sql id="insertColumns">
         <trim suffix="" suffixOverrides=",">
-            <if test="comment_id != null and comment_id != ''">comment_id,</if>
+            <if test="ta_id != null and ta_id != ''">ta_id,</if>
             <if test="topic_id != null and topic_id != ''">topic_id,</if>
             <if test="user_id != null and user_id != ''">user_id,</if>
-            <if test="at_user_id != null and at_user_id != '' ">at_user_id,</if>
-            <if test="comment != null and comment != ''">comment,</if>
-            createtime,
             <if test="is_read != null ">is_read,</if>
         </trim>
     </sql>
@@ -57,13 +48,10 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库值 -->
     <sql id="insertParams">
         <trim suffix="" suffixOverrides=",">
-            <if test="comment_id != null and comment_id != ''">#{comment_id,jdbcType=VARCHAR},</if>
+            <if test="ta_id != null and ta_id != ''">#{ta_id,jdbcType=VARCHAR},</if>
             <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
             <if test="user_id != null and user_id != ''">#{user_id,jdbcType=VARCHAR},</if>
-            <if test="at_user_id != null and at_user_id != ''">#{at_user_id},</if>
-            <if test="comment != null and comment != ''">#{comment,jdbcType=VARCHAR},</if>
-            now(),
-            <if test="is_read != null ">${is_read},</if>
+            <if test="is_read != null ">#{is_read},</if>
         </trim>
     </sql>
 
@@ -76,13 +64,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="user_id != null and user_id != ''">
                 user_id=#{user_id,jdbcType=VARCHAR},
             </if>
-            <if test="at_user_id != null ">
-                at_user_id=#{at_user_id},
-            </if>
-            <if test="comment != null and comment != ''">
-                comment=#{comment,jdbcType=VARCHAR},
-            </if>
-            createtime=now(),
             <if test="is_read != null ">
                 is_read=#{is_read},
             </if>
@@ -99,11 +80,8 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 <if test="t.user_id != null   and t.user_id != '' ">and user_id like
                     concat('%',#{t.user_id},'%')
                 </if>
-                <if test="t.at_user_id != null and t.at_user_id != '' ">and at_user_id like
-                    concat('%',#{t.at_user_id},'%')
-                </if>
-                <if test="t.comment != null   and t.comment != '' ">and comment like
-                    concat('%',#{t.comment},'%')
+                <if test="t.is_read != null  ">and is_read like
+                    concat('%',#{t.is_read},'%')
                 </if>
             </if>
         </trim>
@@ -113,8 +91,8 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <sql id="allAndEqual">
         <trim suffix="" suffixOverrides=",">
             <if test="t !=null ">
-                <if test="t.comment_id != null  and t.comment_id != '' ">and comment_id =
-                    #{t.comment_id}
+                <if test="t.ta_id != null  and t.ta_id != '' ">and ta_id =
+                    #{t.ta_id}
                 </if>
                 <if test="t.topic_id != null  and t.topic_id != '' ">and topic_id =
                     #{t.topic_id}
@@ -122,14 +100,8 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 <if test="t.user_id != null  and t.user_id != '' ">and user_id =
                     #{t.user_id}
                 </if>
-                <if test="t.at_user_id != null  and t.at_user_id != ''  ">and at_user_id =
-                    #{t.at_user_id}
-                </if>
-                <if test="t.comment != null  and t.comment != ''  ">and comment =
-                    #{t.comment}
-                </if>
-                <if test="t.createtime != null  and t.createtime != ''  ">and createtime =
-                    #{t.createtime}
+                <if test="t.is_read != null  and t.is_read != ''  ">and is_read =
+                    #{t.is_read}
                 </if>
             </if>
         </trim>
@@ -137,7 +109,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
     <sql id="primaryKeys">
-        comment_id = #{comment_id}
+        ta_id = #{ta_id}
     </sql>
 
 
@@ -165,7 +137,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 order by <![CDATA[${queryParam.orderFieldListStr}]]>
             </when>
             <otherwise>
-                order by comment_id desc
+                order by ta_id desc
             </otherwise>
         </choose>
 
@@ -177,20 +149,20 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <!-- BaseMapper 对应接口 start  -->
     <!-- 1.  查询,主键查询   -->
-    <select id="selectByPrimaryKey" resultMap="topicCommentResult">
+    <select id="selectByPrimaryKey" resultMap="topicAtResult">
         select
         <include refid="tableColumns"/>
-        from t_topic_comment
+        from t_topic_at
         <where>
             <include refid="primaryKeys"/>
         </where>
     </select>
 
     <!-- 2. 查询,精准查询   -->
-    <select id="selectByEqualT" resultMap="topicCommentResult">
+    <select id="selectByEqualT" resultMap="topicAtResult">
         select
         <include refid="tableColumns"/>
-        from t_topic_comment
+        from t_topic_at
         <where>
             <include refid="allAndEqual"/>
         </where>
@@ -198,12 +170,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <!-- 3. 添加,插入记录   -->
     <insert id="insert">
-        insert into t_topic_comment (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+        insert into t_topic_at (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
     </insert>
 
     <!-- 4. 修改,主键更新  -->
     <update id="updateByPrimaryKey">
-        update t_topic_comment
+        update t_topic_at
         <set>
             <include refid="updateParams"/>
         </set>
@@ -213,51 +185,51 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </update>
 
     <!-- 5. 查询,实体模糊查询   -->
-    <select id="selectByBlurryT" resultMap="topicCommentResult">
+    <select id="selectByBlurryT" resultMap="topicAtResult">
         select
         <include refid="tableColumns"/>
-        from t_topic_comment
+        from t_topic_at
         <where>
             <include refid="allAndLike"/>
         </where>
-        ORDER BY comment_id
+        ORDER BY ta_id
     </select>
 
     <!-- 6. 查询 ,总行数,分页 ,模型 -->
     <select id="countByBlurryT" resultType="java.lang.Integer">
-        select count(1) from t_topic_comment
+        select count(1) from t_topic_at
         <include refid="queryParamSql"/>
     </select>
 
     <!-- 7. 删除,主键删除   -->
     <delete id="deleteByPrimaryKey">
-        delete from t_topic_comment
+        delete from t_topic_at
         <where>
             <include refid="primaryKeys"/>
         </where>
     </delete>
 
     <!-- 8. 删除,按实体精准删除   -->
-    <select id="deleteByT" resultMap="topicCommentResult">
-        delete from t_topic_comment
+    <select id="deleteByT" resultMap="topicAtResult">
+        delete from t_topic_at
         <where>
             <include refid="allAndEqual"/>
         </where>
     </select>
 
     <!-- 9. 删除,按实体多字段模糊删除   -->
-    <select id="deleteByBlurryT" resultMap="topicCommentResult">
-        delete from t_topic_comment
+    <select id="deleteByBlurryT" resultMap="topicAtResult">
+        delete from t_topic_at
         <where>
             <include refid="allAndLike"/>
         </where>
     </select>
 
 
-    <select id="listByModel" resultMap="topicCommentResult">
+    <select id="listByModel" resultMap="topicAtResult">
         select
         <include refid="tableColumns"/>
-        from t_topic_comment
+        from t_topic_at
         <include refid="queryParamSql"/>
     </select>
 
@@ -266,33 +238,6 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
-    <resultMap id="commentVO" type="com.hl.ins.vo.topiccomment.CommentVO">
-        <result column="comment_id" property="comment_id"/>
-        <result column="topic_id" property="topic_id"/>
-        <result column="user_id" property="user_id"/>
-        <result column="user_name" property="user_name"/>
-        <result column="user_icon" property="user_icon"/>
-        <result column="at_user_id" property="at_user_id"/>
-        <result column="at_user_name" property="at_user_name"/>
-        <result column="comment" property="comment"/>
-        <result column="createtime" property="createtime"/>
-    </resultMap>
-
-    <select id="comments" resultMap="commentVO">
-        SELECT ttc.comment_id, ttc.topic_id, ttc.user_id,
-        tu.user_name, tu.user_icon, ttc.at_user_id,
-        tu1.user_name AS 'at_user_name', ttc.comment, ttc.createtime
-        FROM t_topic_comment ttc
-        INNER JOIN t_user tu
-        ON (ttc.topic_id = #{topic_id} AND ttc.user_id = tu.user_id AND tu.user_black = 0)
-        LEFT JOIN t_user tu1
-        ON (ttc.at_user_id = tu1.user_id AND tu1.user_black = 0)
-        ORDER BY ttc.createtime DESC
-    </select>
-
-    <update id="read">
-        UPDATE t_topic_comment SET is_read = 1 WHERE topic_id = #{topic_id}
-    </update>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

@@ -6,10 +6,12 @@ import com.hl.common.constants.ResultCode;
 import com.hl.common.util.UUIDGenerator;
 import com.hl.ins.module.Image;
 import com.hl.ins.module.Topic;
+import com.hl.ins.module.TopicAt;
 import com.hl.ins.module.TopicImages;
 import com.hl.ins.properties.ImagePath;
 import com.hl.ins.properties.OssConfig;
 import com.hl.ins.service.ImageService;
+import com.hl.ins.service.TopicAtService;
 import com.hl.ins.service.TopicImagesService;
 import com.hl.ins.service.TopicService;
 import com.hl.ins.util.Constants;
@@ -28,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author ivan.huang
@@ -43,6 +42,9 @@ public class TopicController extends BaseController {
 
     @Autowired
     private TopicService<Topic> topicService;
+
+    @Autowired
+    private TopicAtService<TopicAt> topicAtService;
 
     @Autowired
     private ImageService<Image> imageService;
@@ -107,9 +109,7 @@ public class TopicController extends BaseController {
             topic.setTopic_type(paramMap.get("topic_type"));
             topic.setIs_valid(1);
             topic.setTopic_createtime(new Date(System.currentTimeMillis()));
-            if(!StringUtils.isEmpty(paramMap.get("topic_at"))){
-                topic.setTopic_at(paramMap.get("topic_at"));
-            }
+
             if(!StringUtils.isEmpty(paramMap.get("topic_labels"))){
                 topic.setTopic_labels(paramMap.get("topic_labels"));
             }
@@ -120,6 +120,18 @@ public class TopicController extends BaseController {
                 topic.setTopic_location(paramMap.get("topic_location"));
             }
             topicService.insert(topic);
+
+            if(!StringUtils.isEmpty(paramMap.get("topic_at"))){
+                List<String> user_ids = Arrays.asList(paramMap.get("topic_at").split(","));
+                for(String user_id : user_ids){
+                    TopicAt ta = new TopicAt();
+                    ta.setTa_id(UUIDGenerator.generate());
+                    ta.setTopic_id(topic.getTopic_id());
+                    ta.setUser_id(user_id);
+                    ta.setIs_read(0);
+                    topicAtService.insert(ta);
+                }
+            }
 
             // image1 保存本地，上传OSS，保存数据库
             // base64图片先保存本地临时文件
@@ -546,7 +558,23 @@ public class TopicController extends BaseController {
         return Result.getSuccResult(topicsVO);
     }
 
-
+    /**
+     * 动态消息 4. 读-被艾特帖子操作接口
+     * @return
+     */
+    @RequestMapping(value = "/topics/at/read", method = RequestMethod.POST)
+    public Result topicRead(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_id");
+            }
+            topicService.topicAtRead(paramMap.get("topic_id"), this.getLoginerId(request));
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
 
 }
 

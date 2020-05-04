@@ -26,9 +26,6 @@ public class Topic implements Serializable {
     //帖子用户标识
     private String topic_user;
 
-    //帖子艾特的用户标识，用逗号隔开
-    private String topic_at;
-
     //帖子标签，多个，用逗号隔开
     private String topic_labels;
 

@@ -34,4 +34,9 @@ public class TopicCommentServiceImp<T> extends BaseServiceImp<T> implements Topi
     public List<CommentVO> comments(String topic_id) {
         return getMapper().comments(topic_id);
     }
+
+    @Override
+    public void read(String topic_id) {
+        getMapper().read(topic_id);
+    }
 }

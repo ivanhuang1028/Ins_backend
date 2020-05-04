@@ -14,4 +14,6 @@ public interface TopicCommentMapper<T> extends BaseMapper<T> {
 
     List<CommentVO> comments(@Param("topic_id") String topic_id);
 
+    void read(@Param("topic_id") String topic_id);
+
 }

@@ -24,4 +24,6 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     List<TopicsVO> topicsUserId(String user_id, String loginerId);
 
     TopicsVO topicsId(String loginerId, String topic_id);
+
+    void topicAtRead(String topic_id, String loginerId);
 }

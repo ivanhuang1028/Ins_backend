@@ -29,4 +29,6 @@ public interface TopicMapper<T> extends BaseMapper<T> {
     List<TopicsVO> topicsUserId(@Param("user_id") String user_id, @Param("loginerId") String loginerId);
 
     TopicsVO topicsId(@Param("loginerId") String loginerId, @Param("topic_id") String topic_id);
+
+    void topicAtRead(@Param("topic_id") String topic_id, @Param("loginerId") String loginerId);
 }

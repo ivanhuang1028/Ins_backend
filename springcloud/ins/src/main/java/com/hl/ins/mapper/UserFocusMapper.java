@@ -13,4 +13,8 @@ public interface UserFocusMapper<T> extends BaseMapper<T> {
 
     List<UserFocusTosVO> focusTos(@Param("focus_from") String focus_from);
 
+    void read(@Param("user_id") String user_id, @Param("loginerId") String loginerId);
+
+    void topicRead(@Param("loginerId") String loginerId, @Param("user_id")String user_id);
+
 }

@@ -71,4 +71,9 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
         return getMapper().topicsId(loginerId, topic_id);
     }
 
+    @Override
+    public void topicAtRead(String topic_id, String loginerId) {
+        getMapper().topicAtRead(topic_id, loginerId);
+    }
+
 }

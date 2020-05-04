@@ -71,6 +71,7 @@ public class UserFocusController extends BaseController {
             }
             tmp.setFocus_id(UUIDGenerator.generate());
             tmp.setFocus_time(new Date(System.currentTimeMillis()));
+            tmp.setRead_time(new Date(System.currentTimeMillis()));
             tmp.setIs_read(0);
             userFocusService.insert(tmp);
 
@@ -99,6 +100,42 @@ public class UserFocusController extends BaseController {
             tmp.setFocus_to(paramMap.get("user_id"));
             userFocusService.deleteByBlurryT(tmp);
 
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 动态消息 2. 读-被用户关注操作接口
+     * @return
+     */
+    @RequestMapping(value = "/focuss/read", method = RequestMethod.POST)
+    public Result focussRead(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_id");
+            }
+            userFocusService.read(paramMap.get("user_id"), this.getLoginerId(request));
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 动态消息 3. 读-关注用户帖子操作接口
+     * @return
+     */
+    @RequestMapping(value = "/topics/read", method = RequestMethod.POST)
+    public Result topicRead(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_id");
+            }
+            userFocusService.topicRead(this.getLoginerId(request), paramMap.get("user_id"));
         }catch (Exception e){
             log.error(e.getMessage());
             return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());

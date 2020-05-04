@@ -20,6 +20,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="focus_from" property="focus_from"/>
         <result column="focus_to" property="focus_to"/>
         <result column="focus_time" property="focus_time"/>
+        <result column="read_time" property="read_time"/>
         <result column="is_read" property="is_read"/>
     </resultMap>
 
@@ -33,6 +34,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             focus_from,
             focus_to,
             focus_time,
+            read_time,
             is_read
         </trim>
     </sql>
@@ -44,6 +46,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="focus_from != null and focus_from != ''">focus_from,</if>
             <if test="focus_to != null and focus_to != ''">focus_to,</if>
             focus_time,
+            read_time,
             <if test="is_read != null ">is_read,</if>
         </trim>
     </sql>
@@ -54,6 +57,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="focus_id != null and focus_id != ''">#{focus_id,jdbcType=VARCHAR},</if>
             <if test="focus_from != null and focus_from != ''">#{focus_from,jdbcType=VARCHAR},</if>
             <if test="focus_to != null and focus_to != ''">#{focus_to,jdbcType=VARCHAR},</if>
+            now(),
             now(),
             <if test="is_read != null ">#{is_read},</if>
         </trim>
@@ -71,6 +75,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="is_read != null ">
                 is_read=#{is_read},
             </if>
+            read_time=now(),
         </trim>
     </sql>
 
@@ -256,7 +261,13 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY tuf.focus_time DESC
     </select>
 
+    <update id="read">
+        UPDATE t_user_focus SET is_read = 1 WHERE focus_from = #{user_id} AND focus_to = #{loginerId}
+    </update>
 
+    <update id="topicRead">
+        UPDATE t_user_focus SET read_time = now() WHERE focus_from = #{loginerId} AND focus_to = #{user_id}
+    </update>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

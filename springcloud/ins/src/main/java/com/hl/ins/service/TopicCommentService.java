@@ -8,4 +8,6 @@ import java.util.List;
 public interface TopicCommentService<T> extends BaseService<T>, TopicCommentMapper<T> {
 
     List<CommentVO> comments(String topic_id);
+
+    void read(String topic_id);
 }
