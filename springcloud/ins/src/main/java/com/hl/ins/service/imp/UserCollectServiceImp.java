@@ -3,10 +3,13 @@ package com.hl.ins.service.imp;
 import com.hl.ins.mapper.BaseMapper;
 import com.hl.ins.mapper.UserCollectMapper;
 import com.hl.ins.service.UserCollectService;
+import com.hl.ins.vo.usercollect.UserCollectVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author ivan.huang
@@ -27,4 +30,8 @@ public class UserCollectServiceImp<T> extends BaseServiceImp<T> implements UserC
     }
 
 
+    @Override
+    public List<UserCollectVO> collects(String loginerId) {
+        return getMapper().collects(loginerId);
+    }
 }

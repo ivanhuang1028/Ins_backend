@@ -12,6 +12,9 @@ import java.util.Date;
 @Data
 public class UserLabel implements Serializable {
 
+    //标识
+    private String tl_id;
+
     //用户标识
     private String user_id;
 

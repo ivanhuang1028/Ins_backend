@@ -20,4 +20,8 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     Integer countTopicsPic(String dic_id);
 
     List<TopicsVideoVO> topicsPic(Integer ran, Integer pic_num, String dic_id);
+
+    List<TopicsVO> topicsUserId(String user_id, String loginerId);
+
+    TopicsVO topicsId(String loginerId, String topic_id);
 }

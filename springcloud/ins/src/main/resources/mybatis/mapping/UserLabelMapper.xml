@@ -16,6 +16,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 <mapper namespace="com.hl.ins.mapper.UserLabelMapper">
 
     <resultMap type="com.hl.ins.module.UserLabel" id="userLabelResult">
+        <result column="tl_id" property="tl_id"/>
         <result column="user_id" property="user_id"/>
         <result column="dic_id" property="dic_id"/>
     </resultMap>
@@ -26,6 +27,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <sql id="tableColumns">
         <trim>
+            tl_id,
             user_id,
             dic_id
         </trim>
@@ -34,6 +36,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库列 -->
     <sql id="insertColumns">
         <trim suffix="" suffixOverrides=",">
+            <if test="tl_id != null and tl_id != ''">tl_id,</if>
             <if test="user_id != null and user_id != ''">user_id,</if>
             <if test="dic_id != null and dic_id != ''">dic_id,</if>
         </trim>
@@ -42,6 +45,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- insertColumns 入库值 -->
     <sql id="insertParams">
         <trim suffix="" suffixOverrides=",">
+            <if test="tl_id != null and tl_id != ''">#{tl_id,jdbcType=VARCHAR},</if>
             <if test="user_id != null and user_id != ''">#{user_id,jdbcType=VARCHAR},</if>
             <if test="dic_id != null and dic_id != ''">#{dic_id,jdbcType=VARCHAR},</if>
         </trim>
@@ -50,6 +54,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <!-- updateParams  更新列 -->
     <sql id="updateParams">
         <trim suffix="" suffixOverrides=",">
+            <if test="user_id != null">
+                dic_id=#{user_id,jdbcType=VARCHAR},
+            </if>
             <if test="dic_id != null">
                 dic_id=#{dic_id,jdbcType=VARCHAR},
             </if>

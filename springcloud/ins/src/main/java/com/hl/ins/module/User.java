@@ -38,7 +38,10 @@ public class User implements Serializable {
     //用户手机号
     private String user_phone;
 
-    //用户微信号
+    //微信openId
+    private String user_weixin_openid;
+
+    //微信号
     private String user_weixin_account;
 
     //是否热门用户

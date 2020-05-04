@@ -74,10 +74,10 @@ public class ImageBase64Converter {
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        String imgBase64Str= ImageBase64Converter.convertFileToBase64("E:\\test.mp4");
+        String imgBase64Str= ImageBase64Converter.convertFileToBase64("D:\\icon.png");
         System.out.println("本地视频转换Base64:" + imgBase64Str);
         System.out.println("Base64字符串length="+imgBase64Str.length());
-        ImageBase64Converter.convertBase64ToFile(imgBase64Str,"E:\\","test1.mp4");
+        ImageBase64Converter.convertBase64ToFile(imgBase64Str,"D:\\","icon1.png");
         System.out.println("duration:"+(System.currentTimeMillis()-start));
 
 //        start=System.currentTimeMillis();

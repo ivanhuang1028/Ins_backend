@@ -1,6 +1,8 @@
 package com.hl.ins.mapper;
 
+import com.hl.ins.vo.user.UserDetailInfoVO;
 import com.hl.ins.vo.user.UserInfoVO;
+import com.hl.ins.vo.user.UserLabelVO;
 import com.hl.ins.vo.user.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,5 +26,9 @@ public interface UserMapper<T> extends BaseMapper<T> {
     List<UserVO> usersRegion(@Param("logierId") String loginerId, @Param("key") String key);
 
     UserInfoVO usersInfo(@Param("user_id") String user_id);
+
+    UserDetailInfoVO usersDetailInfo(@Param("logierId") String loginerId);
+
+    List<UserLabelVO> usersLabels(@Param("logierId") String loginerId);
 
 }

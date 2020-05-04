@@ -3,7 +3,9 @@ package com.hl.ins.service.imp;
 import com.hl.ins.mapper.BaseMapper;
 import com.hl.ins.mapper.UserMapper;
 import com.hl.ins.service.UserService;
+import com.hl.ins.vo.user.UserDetailInfoVO;
 import com.hl.ins.vo.user.UserInfoVO;
+import com.hl.ins.vo.user.UserLabelVO;
 import com.hl.ins.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +61,15 @@ public class UserServiceImp<T> extends BaseServiceImp<T> implements UserService<
     @Override
     public UserInfoVO usersInfo(String user_id) {
         return getMapper().usersInfo(user_id);
+    }
+
+    @Override
+    public UserDetailInfoVO usersDetailInfo(String loginerId) {
+        return getMapper().usersDetailInfo(loginerId);
+    }
+
+    @Override
+    public List<UserLabelVO> usersLabels(String loginerId) {
+        return getMapper().usersLabels(loginerId);
     }
 }

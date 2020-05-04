@@ -25,4 +25,8 @@ public interface TopicMapper<T> extends BaseMapper<T> {
     Integer countTopicsPic(@Param("dic_id") String dic_id);
 
     List<TopicsVideoVO> topicsPic(@Param("ran") Integer ran, @Param("pic_num") Integer pic_num, @Param("dic_id") String dic_id);
+
+    List<TopicsVO> topicsUserId(@Param("user_id") String user_id, @Param("loginerId") String loginerId);
+
+    TopicsVO topicsId(@Param("loginerId") String loginerId, @Param("topic_id") String topic_id);
 }

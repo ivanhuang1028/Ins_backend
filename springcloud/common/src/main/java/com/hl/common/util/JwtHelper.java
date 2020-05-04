@@ -66,7 +66,7 @@ public class JwtHelper {
 	}
 
 	public static void main(String[] args) {
-//		System.out.println(JwtHelper.createJWT("小黄", "c9c4756847584a999cfc91b8e2a78c89", "", "",7,"L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg=="));
-		System.out.println(JwtHelper.createJWT("小陈", "3c2856506c9948b1a6f46be5bdb99817", "", "",7,"L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg=="));
+		System.out.println(JwtHelper.createJWT("小黄人", "c9c4756847584a999cfc91b8e2a78c89", "", "",7,"L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg=="));
+//		System.out.println(JwtHelper.createJWT("小陈", "3c2856506c9948b1a6f46be5bdb99817", "", "",7,"L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg=="));
 	}
 }

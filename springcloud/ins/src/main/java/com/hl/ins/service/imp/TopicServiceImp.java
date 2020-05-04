@@ -60,4 +60,15 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
     public List<TopicsVideoVO> topicsPic(Integer ran, Integer pic_num, String dic_id) {
         return getMapper().topicsPic(ran, pic_num, dic_id);
     }
+
+    @Override
+    public List<TopicsVO> topicsUserId(String user_id, String loginerId) {
+        return getMapper().topicsUserId(user_id, loginerId);
+    }
+
+    @Override
+    public TopicsVO topicsId(String loginerId, String topic_id) {
+        return getMapper().topicsId(loginerId, topic_id);
+    }
+
 }

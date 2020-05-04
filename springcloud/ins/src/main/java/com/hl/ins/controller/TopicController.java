@@ -64,7 +64,6 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/topics", method = RequestMethod.GET)
     public Result topics(HttpServletRequest request, PageVO pageVO, String topic_id){
-        log.info("关注人帖子列表/推荐帖子列表接口   开始..");
         List<TopicsVO> topicsVO = new ArrayList<>();
         // 分页
         if(pageVO.getOpenPage()){
@@ -79,7 +78,6 @@ public class TopicController extends BaseController {
         }
 
         ResultsPageVO resultsPageVO = ResultsPageVO.init(topicsVO, pageVO);
-        log.info("关注人帖子列表/推荐帖子列表接口   结束..");
         return Result.getSuccResult(resultsPageVO);
     }
 
@@ -516,6 +514,38 @@ public class TopicController extends BaseController {
 
         return Result.getSuccResult(topicsVideoVOs);
     }
+
+    /**
+     * 个人主页 6. 个人帖子列表列表接口
+     * @return
+     */
+    @RequestMapping(value = "/topics/{user_id}", method = RequestMethod.GET)
+    public Result topicsUserId(HttpServletRequest request, PageVO pageVO, @PathVariable("user_id") String user_id){
+        List<TopicsVO> topicsVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        topicsVO = topicService.topicsUserId(user_id, getLoginerId(request));
+        for(TopicsVO vo : topicsVO){
+            vo.setImages(topicService.topicsImagesVO(vo.getTopic_id()));
+        }
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(topicsVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 个人主页 10. 单个帖子详情接口
+     * @return
+     */
+    @RequestMapping(value = "/topics/detail/{topic_id}", method = RequestMethod.GET)
+    public Result topicsId(HttpServletRequest request, @PathVariable("topic_id") String topic_id){
+        TopicsVO topicsVO = topicService.topicsId(this.getLoginerId(request), topic_id);
+        topicsVO.setImages(topicService.topicsImagesVO(topicsVO.getTopic_id()));
+        return Result.getSuccResult(topicsVO);
+    }
+
 
 
 }

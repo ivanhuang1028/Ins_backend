@@ -338,8 +338,8 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
         (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
         tt.topic_createtime AS 'topic_publish_time',
-        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id AND ttl.user_id = 'c9c4756847584a999cfc91b8e2a78c89') AS 'topic_is_like',
-        (SELECT COUNT(1) FROM t_user_collect tuc WHERE tuc.topic_id = tt.topic_id AND tuc.user_id = 'c9c4756847584a999cfc91b8e2a78c89') AS 'topic_is_collect',
+        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id AND ttl.user_id = #{user_id}) AS 'topic_is_like',
+        (SELECT COUNT(1) FROM t_user_collect tuc WHERE tuc.topic_id = tt.topic_id AND tuc.user_id = #{user_id}) AS 'topic_is_collect',
         (SELECT COUNT(1) FROM t_topic_images tti WHERE tti.topic_id = tt.topic_id) AS 'images_total'
         FROM t_user_focus tuf
         INNER JOIN t_user tu
@@ -426,6 +426,46 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ON (tti.image_id = ti.image_id AND ti.image_name LIKE 'image1.%')
         ORDER BY tt.is_recommend DESC, tt.recommend_time DESC, tt.topic_createtime DESC
         LIMIT ${ran}, ${pic_num}
+    </select>
+
+    <select id="topicsUserId" resultMap="topicsVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_desc,
+        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
+        (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
+        tt.topic_createtime AS 'topic_publish_time',
+         CASE WHEN ttl.like_id IS NULL THEN 0
+         ELSE 1 END AS 'topic_is_like',
+         CASE WHEN tuc.uc_id IS NULL THEN 0
+         ELSE 1 END AS 'topic_is_collect',
+         (SELECT COUNT(1) FROM t_topic_images tti WHERE tti.topic_id = tt.topic_id ) AS 'images_total'
+        FROM t_topic tt
+        INNER JOIN t_user tu
+        ON (tt.topic_user = tu.user_id AND tu.user_id = #{user_id})
+        LEFT JOIN t_topic_like ttl
+        ON (tt.topic_id = ttl.topic_id AND ttl.user_id = #{loginerId})
+        LEFT JOIN t_user_collect tuc
+        ON (tt.topic_id = tuc.topic_id AND tuc.user_id = #{loginerId})
+        ORDER BY tt.topic_createtime desc
+    </select>
+
+    <select id="topicsId" resultMap="topicsVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_desc,
+        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
+        (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
+        tt.topic_createtime AS 'topic_publish_time',
+         CASE WHEN ttl.like_id IS NULL THEN 0
+         ELSE 1 END AS 'topic_is_like',
+         CASE WHEN tuc.uc_id IS NULL THEN 0
+         ELSE 1 END AS 'topic_is_collect',
+         (SELECT COUNT(1) FROM t_topic_images tti WHERE tti.topic_id = tt.topic_id ) AS 'images_total'
+        FROM t_topic tt
+        INNER JOIN t_user tu
+        ON (tt.topic_user = tu.user_id AND tt.topic_id = #{topic_id} )
+        LEFT JOIN t_topic_like ttl
+        ON (tt.topic_id = ttl.topic_id AND ttl.user_id = #{loginerId})
+        LEFT JOIN t_user_collect tuc
+        ON (tt.topic_id = tuc.topic_id AND tuc.user_id = #{loginerId})
+        ORDER BY tt.topic_createtime desc
     </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->

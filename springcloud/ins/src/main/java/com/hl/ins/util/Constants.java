@@ -22,6 +22,10 @@ public class Constants {
     public static final String TOPIC_TYPE_PIC = "PIC";
     public static final String TOPIC_TYPE_VIDEO = "VIDEO";
 
+    public static final String LOGIN_WEIXIN = "weinxin";
+
+    public static final String LOGIN_ONEKEY = "onekey";
+
     public static final List<String> TOPIC_TYPES = new ArrayList<>();
 
 

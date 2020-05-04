@@ -25,6 +25,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="user_region" property="user_region"/>
         <result column="user_icon" property="user_icon"/>
         <result column="user_phone" property="user_phone"/>
+        <result column="user_weixin_openid" property="user_weixin_openid"/>
         <result column="user_weixin_account" property="user_weixin_account"/>
         <result column="user_hot" property="user_hot"/>
         <result column="user_hot_time" property="user_hot_time"/>
@@ -49,6 +50,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             user_region,
             user_icon,
             user_phone,
+            user_weixin_openid,
             user_weixin_account,
             user_hot,
             user_hot_time,
@@ -71,6 +73,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="user_region != null and user_region != ''">user_region,</if>
             <if test="user_icon != null and user_icon != ''">user_icon,</if>
             <if test="user_phone != null and user_phone != ''">user_phone,</if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">user_weixin_openid,</if>
             <if test="user_weixin_account != null and user_weixin_account != ''">user_weixin_account,</if>
             <if test="user_hot != null ">user_hot,</if>
             <if test="user_hot_time != null ">user_hot_time,</if>
@@ -93,6 +96,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="user_region != null and user_region != ''">#{user_region},</if>
             <if test="user_icon != null and user_icon != ''">#{user_icon,jdbcType=VARCHAR},</if>
             <if test="user_phone != null and user_phone != ''">#{user_phone,jdbcType=VARCHAR},</if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">#{user_weixin_openid,jdbcType=VARCHAR},</if>
             <if test="user_weixin_account != null and user_weixin_account != ''">#{user_weixin_account,jdbcType=VARCHAR},</if>
             <if test="user_hot != null ">#{user_hot},</if>
             <if test="user_hot_time != null ">#{user_hot_time},</if>
@@ -115,8 +119,8 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="user_school != null ">
                 user_school=#{user_school},
             </if>
-            <if test="user_gender != null and user_gender != ''">
-                user_gender=#{user_gender,jdbcType=VARCHAR},
+            <if test="user_gender != null ">
+                user_gender=${user_gender},
             </if>
             <if test="user_birthday != null and user_birthday != ''">
                 user_birthday=#{user_birthday,jdbcType=VARCHAR},
@@ -129,6 +133,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             </if>
             <if test="user_phone != null and user_phone != ''">
                 user_phone=#{user_phone},
+            </if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">
+                user_weixin_account=#{user_weixin_account,jdbcType=VARCHAR},
             </if>
             <if test="user_weixin_account != null and user_weixin_account != ''">
                 user_weixin_account=#{user_weixin_account,jdbcType=VARCHAR},
@@ -173,6 +180,12 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 <if test="t.user_phone != null   and t.user_phone != ''    ">and user_phone like
                     concat('%',#{t.user_phone},'%')
                 </if>
+                <if test="t.user_weixin_openid != null   and t.user_weixin_openid != ''    ">and user_weixin_openid like
+                    concat('%',#{t.user_weixin_openid},'%')
+                </if>
+                <if test="t.user_weixin_account != null   and t.user_weixin_account != ''    ">and user_weixin_account like
+                    concat('%',#{t.user_weixin_account},'%')
+                </if>
                 <if test="t.user_hot != null   and t.user_hot != ''    ">and user_hot like
                     concat('%',#{t.user_hot},'%')
                 </if>
@@ -207,6 +220,15 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.user_region != null and t.user_region != '' ">and user_region =
                     #{t.user_region}
+                </if>
+                <if test="t.user_phone != null and t.user_phone != '' ">and user_phone =
+                    #{t.user_phone}
+                </if>
+                <if test="t.user_weixin_openid != null and t.user_weixin_openid != '' ">and user_weixin_openid =
+                    #{t.user_weixin_openid}
+                </if>
+                <if test="t.user_weixin_account != null and t.user_weixin_account != '' ">and user_weixin_account =
+                    #{t.user_weixin_account}
                 </if>
             </if>
         </trim>
@@ -449,6 +471,41 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_from = #{user_id} ) AS 'user_focus_num'
         FROM t_user tu
         WHERE tu.user_id = #{user_id}
+    </select>
+
+    <resultMap id="userDetailInfoVO" type="com.hl.ins.vo.user.UserDetailInfoVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_desc" property="user_desc"/>
+        <result column="user_school" property="user_school"/>
+        <result column="user_gender" property="user_gender"/>
+        <result column="user_birthday" property="user_birthday"/>
+        <result column="user_region" property="user_region"/>
+    </resultMap>
+
+    <select id="usersDetailInfo" resultMap="userDetailInfoVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        tu.user_desc, tu.user_school, tu.user_gender,
+        tu.user_birthday, tu.user_region
+        FROM t_user tu WHERE tu.user_id = #{logierId}
+    </select>
+
+    <resultMap id="userLabelVO" type="com.hl.ins.vo.user.UserLabelVO">
+        <result column="dic_id" property="dic_id"/>
+        <result column="dic_value" property="dic_value"/>
+        <result column="is_selected" property="is_selected"/>
+    </resultMap>
+
+    <select id="usersLabels" resultMap="userLabelVO">
+        SELECT td.dic_id, td.dic_value,
+        CASE WHEN tul.tl_id IS NULL THEN 0
+        ELSE 1 END AS 'is_selected'
+         FROM t_dictionary td
+        LEFT JOIN t_user_label tul
+        ON (td.dic_id = tul.dic_id AND tul.user_id = #{logierId})
+        WHERE td.dic_name = 'label'
+        ORDER BY td.dic_seq
     </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->

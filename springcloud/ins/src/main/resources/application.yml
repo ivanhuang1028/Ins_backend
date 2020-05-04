@@ -44,7 +44,8 @@ my-props:
 #api管理
 api-management:
   exclude-path-patterns:
-    - /otherSystem/login
+    - /login/weixin
+    - /login/onekey
 
 # 分页默认配置
 pageSize: 10

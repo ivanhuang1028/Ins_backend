@@ -229,6 +229,21 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
 
     <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="userCollectVO" type="com.hl.ins.vo.usercollect.UserCollectVO">
+        <result column="topic_id" property="topic_id"/>
+        <result column="topic_remote_link" property="topic_remote_link"/>
+    </resultMap>
+
+    <select id="collects" resultMap="userCollectVO">
+        SELECT tuc.topic_id, ti.image_remote_link AS 'topic_remote_link' FROM t_user_collect tuc
+        INNER JOIN t_topic tt
+        ON (tuc.topic_id = tt.topic_id AND tuc.user_id = #{loginerId})
+        INNER JOIN t_topic_images tti
+        ON (tti.topic_id = tt.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ORDER BY tuc.collecttime DESC
+    </select>
 
     <!-- OtherModule Mapper 对应接口 end  -->
 

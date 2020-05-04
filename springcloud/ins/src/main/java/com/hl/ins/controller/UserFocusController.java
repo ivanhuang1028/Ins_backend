@@ -3,21 +3,24 @@ package com.hl.ins.controller;
 import com.github.pagehelper.PageHelper;
 import com.hl.common.constants.Result;
 import com.hl.common.constants.ResultCode;
+import com.hl.common.util.UUIDGenerator;
 import com.hl.ins.module.Dictionary;
 import com.hl.ins.module.UserFocus;
+import com.hl.ins.module.UserLabel;
 import com.hl.ins.service.UserFocusService;
 import com.hl.ins.vo.page.PageVO;
 import com.hl.ins.vo.page.ResultsPageVO;
 import com.hl.ins.vo.userfocus.UserFocusTosVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.plexus.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ivan.huang
@@ -44,6 +47,63 @@ public class UserFocusController extends BaseController {
         userFocusTosVOList = userFocusService.focusTos(getLoginerId(request));
         ResultsPageVO resultsPageVO = ResultsPageVO.init(userFocusTosVOList, pageVO);
         return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 个人主页 7. 用户关注操作接口
+     * @return
+     */
+    @RequestMapping(value = "/focuss", method = RequestMethod.POST)
+    public Result focuss(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_id");
+            }
+
+            String loginerId = this.getLoginerId(request);
+
+            UserFocus tmp = new UserFocus();
+            tmp.setFocus_from(loginerId);
+            tmp.setFocus_to(paramMap.get("user_id"));
+            List<UserFocus> list = userFocusService.selectByBlurryT(tmp);
+            if(!ArrayUtils.isEmpty(list.toArray())){
+                return Result.getFalseResult(ResultCode.FAILURE, "已关注");
+            }
+            tmp.setFocus_id(UUIDGenerator.generate());
+            tmp.setFocus_time(new Date(System.currentTimeMillis()));
+            tmp.setIs_read(0);
+            userFocusService.insert(tmp);
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 个人主页 8. 用户取消关注操作接口
+     * @return
+     */
+    @RequestMapping(value = "/unfocuss", method = RequestMethod.POST)
+    public Result unfocuss(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_id"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_id");
+            }
+
+            String loginerId = this.getLoginerId(request);
+
+            UserFocus tmp = new UserFocus();
+            tmp.setFocus_from(loginerId);
+            tmp.setFocus_to(paramMap.get("user_id"));
+            userFocusService.deleteByBlurryT(tmp);
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
     }
 
 }

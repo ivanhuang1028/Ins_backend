@@ -11,5 +11,5 @@ public class JwtConfig {
     private String encodedKey;
     private String audience;
     private String issuer;
-    private String expDates;
+    private Integer expDates;
 }
