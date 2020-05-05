@@ -3,6 +3,7 @@ package com.hl.ins.service.imp;
 import com.hl.ins.mapper.BaseMapper;
 import com.hl.ins.mapper.TopicMapper;
 import com.hl.ins.service.TopicService;
+import com.hl.ins.vo.topic.TopicsCommentsVO;
 import com.hl.ins.vo.topic.TopicsImagesVO;
 import com.hl.ins.vo.topic.TopicsVO;
 import com.hl.ins.vo.topic.TopicsVideoVO;
@@ -74,6 +75,11 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
     @Override
     public void topicAtRead(String topic_id, String loginerId) {
         getMapper().topicAtRead(topic_id, loginerId);
+    }
+
+    @Override
+    public List<TopicsCommentsVO> topicsComments(String topic_id) {
+        return getMapper().topicsComments(topic_id);
     }
 
 }

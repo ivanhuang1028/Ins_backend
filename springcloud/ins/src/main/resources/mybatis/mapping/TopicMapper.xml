@@ -459,6 +459,26 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         UPDATE t_topic_at SET is_read = 1 WHERE topic_id = #{topic_id} AND user_id = #{loginerId}
     </update>
 
+    <resultMap id="topicsCommentsVO" type="com.hl.ins.vo.topic.TopicsCommentsVO">
+        <result column="comment_id" property="comment_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="comment" property="comment"/>
+        <result column="at_user_id" property="at_user_id"/>
+        <result column="at_user_name" property="at_user_name"/>
+    </resultMap>
+
+    <select id="topicsComments" resultMap="topicsCommentsVO">
+        SELECT ttc.comment_id, tu.user_id, tu.user_name, ttc.comment,
+        ttc.at_user_id, tu1.user_name AS 'at_user_name'
+        FROM t_topic_comment ttc
+        INNER JOIN t_user tu
+        ON (ttc.user_id = tu.user_id AND ttc.topic_id = #{topic_id})
+        LEFT JOIN t_user tu1
+        ON (ttc.at_user_id = tu1.user_id)
+        ORDER BY ttc.createtime DESC LIMIT 0,2
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

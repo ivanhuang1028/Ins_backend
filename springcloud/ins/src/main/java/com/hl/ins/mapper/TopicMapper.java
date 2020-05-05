@@ -1,5 +1,6 @@
 package com.hl.ins.mapper;
 
+import com.hl.ins.vo.topic.TopicsCommentsVO;
 import com.hl.ins.vo.topic.TopicsImagesVO;
 import com.hl.ins.vo.topic.TopicsVO;
 import com.hl.ins.vo.topic.TopicsVideoVO;
@@ -31,4 +32,6 @@ public interface TopicMapper<T> extends BaseMapper<T> {
     TopicsVO topicsId(@Param("loginerId") String loginerId, @Param("topic_id") String topic_id);
 
     void topicAtRead(@Param("topic_id") String topic_id, @Param("loginerId") String loginerId);
+
+    List<TopicsCommentsVO> topicsComments(@Param("topic_id") String topic_id);
 }

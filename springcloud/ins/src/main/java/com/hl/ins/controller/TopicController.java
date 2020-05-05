@@ -77,7 +77,9 @@ public class TopicController extends BaseController {
 
         for(TopicsVO vo : topicsVO){
             vo.setImages(topicService.topicsImagesVO(vo.getTopic_id()));
+            vo.setComments(topicService.topicsComments(vo.getTopic_id()));
         }
+
 
         ResultsPageVO resultsPageVO = ResultsPageVO.init(topicsVO, pageVO);
         return Result.getSuccResult(resultsPageVO);

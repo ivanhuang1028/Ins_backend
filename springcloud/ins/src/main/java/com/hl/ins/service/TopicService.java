@@ -1,6 +1,7 @@
 package com.hl.ins.service;
 
 import com.hl.ins.mapper.TopicMapper;
+import com.hl.ins.vo.topic.TopicsCommentsVO;
 import com.hl.ins.vo.topic.TopicsImagesVO;
 import com.hl.ins.vo.topic.TopicsVO;
 import com.hl.ins.vo.topic.TopicsVideoVO;
@@ -26,4 +27,6 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     TopicsVO topicsId(String loginerId, String topic_id);
 
     void topicAtRead(String topic_id, String loginerId);
+
+    List<TopicsCommentsVO> topicsComments(String topic_id);
 }

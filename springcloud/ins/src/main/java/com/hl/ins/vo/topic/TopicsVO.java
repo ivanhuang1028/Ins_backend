@@ -19,5 +19,6 @@ public class TopicsVO {
     private Integer topic_is_collect;
     private Integer images_total;
     private List<TopicsImagesVO> images;
+    private List<TopicsCommentsVO> comments;
 
 }
