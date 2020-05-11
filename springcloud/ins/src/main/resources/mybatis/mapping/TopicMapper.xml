@@ -311,6 +311,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="user_name" property="user_name"/>
         <result column="user_icon" property="user_icon"/>
         <result column="topic_id" property="topic_id"/>
+        <result column="topic_type" property="topic_type"/>
         <result column="topic_desc" property="topic_desc"/>
         <result column="topic_like_count" property="topic_like_count"/>
         <result column="topic_comment_count" property="topic_comment_count"/>
@@ -321,7 +322,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </resultMap>
 
     <select id="topics" resultMap="topicsVO">
-        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_desc,
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_type, tt.topic_desc,
         (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
         (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
         tt.topic_createtime AS 'topic_publish_time',
@@ -416,7 +417,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </select>
 
     <select id="topicsUserId" resultMap="topicsVO">
-        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_desc,
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_type, tt.topic_desc,
         (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
         (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
         tt.topic_createtime AS 'topic_publish_time',
@@ -436,7 +437,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </select>
 
     <select id="topicsId" resultMap="topicsVO">
-        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_desc,
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tt.topic_id, tt.topic_type, tt.topic_desc,
         (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'topic_like_count',
         (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'topic_comment_count',
         tt.topic_createtime AS 'topic_publish_time',

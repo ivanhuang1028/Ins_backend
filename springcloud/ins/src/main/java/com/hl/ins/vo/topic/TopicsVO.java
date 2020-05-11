@@ -11,6 +11,7 @@ public class TopicsVO {
     private String user_name;
     private String user_icon;
     private String topic_id;
+    private String topic_type;
     private String topic_desc;
     private Integer topic_like_count;
     private Integer topic_comment_count;
