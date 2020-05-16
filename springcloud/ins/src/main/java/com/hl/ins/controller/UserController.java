@@ -345,5 +345,21 @@ public class UserController extends BaseController {
         }
     }
 
+    /**
+     * 动态消息 10. 推荐用户列表接口
+     * @return
+     */
+    @RequestMapping(value = "/users/recommend", method = RequestMethod.GET)
+    public Result usersRecommend(HttpServletRequest request, PageVO pageVO){
+        List<UserVO> userVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+        userVO = userService.usersRecommend(getLoginerId(request));
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(userVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
 }
 

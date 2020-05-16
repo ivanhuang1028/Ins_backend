@@ -395,6 +395,18 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
     </select>
 
+    <select id="usersRecommend" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
     <select id="users" resultMap="userVO">
         SELECT tu.user_id, tu.user_name, tu.user_icon,
         CASE WHEN tuf.focus_id IS NULL THEN 0

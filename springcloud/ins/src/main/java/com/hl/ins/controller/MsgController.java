@@ -1,6 +1,7 @@
 package com.hl.ins.controller;
 
 import com.github.pagehelper.PageHelper;
+import com.hl.common.constants.QueryParam;
 import com.hl.common.constants.Result;
 import com.hl.common.constants.ResultCode;
 import com.hl.common.util.DateUtil;
@@ -54,7 +55,10 @@ public class MsgController extends BaseController {
     private ImageService<Image> imageService;
 
     @Autowired
-    private TopicService<Topic> topicService;
+    private SysMsgService<SysMsg> sysMsgService;
+
+    @Autowired
+    private SysMsgReadService<SysMsgRead> sysMsgReadService;
 
     @Autowired
     private ImagePath imagePath;
@@ -289,7 +293,74 @@ public class MsgController extends BaseController {
         return Result.getSuccResult(resultsPageVO);
     }
 
+    /**
+     * 动态消息 6. 未读系统消息数量接口
+     */
+    @RequestMapping(value = "/sysmsgs/count", method = RequestMethod.GET)
+    public Result sysMsgsCount(HttpServletRequest request) {
+        try {
+            String user_id = this.getLoginerId(request);
 
+            SysMsgRead sysMsgReadTmp = new SysMsgRead();
+            sysMsgReadTmp.setUser_id(user_id);
+            SysMsgRead sysMsgReadCurrent = sysMsgReadService.selectByEqualT(sysMsgReadTmp);
+            if(sysMsgReadCurrent == null || StringUtils.isEmpty(sysMsgReadCurrent.getSmr_id())){
+                return Result.getSuccResult(sysMsgService.countAll());
+            }
+            return Result.getSuccResult(sysMsgService.sysMsgsCount(user_id));
+        }catch (Exception e){
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+
+    }
+
+    /**
+     * 动态消息 7. 第一条系统消息内容接口
+     */
+    @RequestMapping(value = "/sysmsgs/first", method = RequestMethod.GET)
+    public Result sysMsgsFirst(HttpServletRequest request) {
+        SysMsg sysMsg = sysMsgService.getFirst();
+        return Result.getSuccResult(sysMsg);
+
+    }
+
+    /**
+     * 动态消息 8. 系统消息列表接口
+     */
+    @RequestMapping(value = "/sysmsgs", method = RequestMethod.GET)
+    public Result sysmsgs(HttpServletRequest request, PageVO pageVO) {
+        List<SysMsg> sysMsgs = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        sysMsgs = sysMsgService.selectByBlurryT(null);
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(sysMsgs, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 动态消息 9. 系统消息读参照接口
+     */
+    @RequestMapping(value = "/sysmsgs/read", method = RequestMethod.POST)
+    public Result sysMsgsRead(HttpServletRequest request) {
+        try {
+            SysMsgRead sysMsgReadTmp = new SysMsgRead();
+            sysMsgReadTmp.setUser_id(this.getLoginerId(request));
+            SysMsgRead sysMsgReadCurrent = sysMsgReadService.selectByEqualT(sysMsgReadTmp);
+            if(sysMsgReadCurrent == null || StringUtils.isEmpty(sysMsgReadCurrent.getSmr_id())){
+                sysMsgReadTmp.setSmr_id(UUIDGenerator.generate());
+                sysMsgReadService.insert(sysMsgReadTmp);
+            }else {
+                sysMsgReadCurrent.setRead_time(new Date(System.currentTimeMillis()));
+                sysMsgReadService.updateByPrimaryKey(sysMsgReadCurrent);
+            }
+        }catch (Exception e){
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
 
 }
 

@@ -25,4 +25,6 @@ public interface UserService<T> extends BaseService<T>, UserMapper<T> {
     UserDetailInfoVO usersDetailInfo(String loginerId);
 
     List<UserLabelVO> usersLabels(String loginerId);
+
+    List<UserVO> usersRecommend(String loginerId);
 }

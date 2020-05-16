@@ -72,4 +72,9 @@ public class UserServiceImp<T> extends BaseServiceImp<T> implements UserService<
     public List<UserLabelVO> usersLabels(String loginerId) {
         return getMapper().usersLabels(loginerId);
     }
+
+    @Override
+    public List<UserVO> usersRecommend(String loginerId) {
+        return getMapper().usersRecommend(loginerId);
+    }
 }

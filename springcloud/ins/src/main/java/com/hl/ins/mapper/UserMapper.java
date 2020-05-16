@@ -31,4 +31,6 @@ public interface UserMapper<T> extends BaseMapper<T> {
 
     List<UserLabelVO> usersLabels(@Param("logierId") String loginerId);
 
+    List<UserVO> usersRecommend(@Param("logierId") String loginerId);
+
 }
