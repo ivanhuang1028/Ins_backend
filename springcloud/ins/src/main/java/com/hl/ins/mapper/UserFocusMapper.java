@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface UserFocusMapper<T> extends BaseMapper<T> {
 
-    List<UserFocusTosVO> focusTos(@Param("focus_from") String focus_from);
+    List<UserFocusTosVO> focusTos(@Param("focus_from") String focus_from, @Param("key") String key);
 
     void read(@Param("user_id") String user_id, @Param("loginerId") String loginerId);
 

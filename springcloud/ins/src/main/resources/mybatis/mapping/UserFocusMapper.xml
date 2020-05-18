@@ -257,7 +257,11 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         FROM t_user_focus tuf
         INNER JOIN t_user tu
         ON (tuf.focus_from = #{focus_from}
-        AND tuf.focus_to = tu.user_id AND tu.user_black = 0 )
+        AND tuf.focus_to = tu.user_id AND tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_name LIKE concat('%',#{key},'%')
+        </if>
+        )
         ORDER BY tuf.focus_time DESC
     </select>
 

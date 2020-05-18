@@ -30,8 +30,8 @@ public class UserFocusServiceImp<T> extends BaseServiceImp<T> implements UserFoc
     }
 
     @Override
-    public List<UserFocusTosVO> focusTos(String focus_from) {
-        return getMapper().focusTos(focus_from);
+    public List<UserFocusTosVO> focusTos(String focus_from, String key) {
+        return getMapper().focusTos(focus_from, key);
     }
 
     @Override
