@@ -10,7 +10,6 @@ public class MsgVO {
     private String user_to;
     private String msg_type;
     private String msg_content;
-    private String msg_link;
     private String msg_time;
     private String topic_user_id;
     private String topic_user_name;

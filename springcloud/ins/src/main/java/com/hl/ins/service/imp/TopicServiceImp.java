@@ -82,4 +82,9 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
         return getMapper().topicsComments(topic_id);
     }
 
+    @Override
+    public List<TopicsVO> recommendTopics(String loginerId, String topic_id) {
+        return getMapper().recommendTopics(loginerId, topic_id);
+    }
+
 }
