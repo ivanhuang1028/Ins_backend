@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserFocusService<T> extends BaseService<T>, UserFocusMapper<T> {
 
-    public List<UserFocusTosVO> focusTos(String focus_from, String key);
+    public List<UserFocusTosVO> focusTos(String focus_from, String key, String dic_id);
 
     void read(String user_id, String loginerId);
 

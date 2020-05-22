@@ -388,11 +388,11 @@ Copyright (c) 2016 by ivan.huang all rights reserved
          FROM t_user tu
         LEFT JOIN t_user_focus tuf
         ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
-        WHERE tu.user_black = 0
+        WHERE tu.user_black = 0 and tu.user_hot = 1
         <if test="key != null  and key != ''  ">
             AND tu.user_name LIKE concat('%',#{key},'%')
         </if>
-        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+        ORDER BY tu.user_hot_time DESC
     </select>
 
     <select id="usersRecommend" resultMap="userVO">

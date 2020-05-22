@@ -186,7 +186,11 @@ public class MsgController extends BaseController {
             String logierId = getLoginerId(request);
 
             Msg msg = new Msg();
-            msg.setMsg_id(UUIDGenerator.generate());
+            if(StringUtils.isEmpty(paramMap.get("msg_id"))){
+                msg.setMsg_id(UUIDGenerator.generate());
+            }else{
+                msg.setMsg_id(paramMap.get("msg_id"));
+            }
             msg.setMsg_type(Integer.valueOf(paramMap.get("msg_type")));
             msg.setUser_from(logierId);
             msg.setUser_to(paramMap.get("msg_user_id"));

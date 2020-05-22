@@ -229,7 +229,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         INNER JOIN t_user tu
         ON (tms.user_ids LIKE concat('%',#{user_id},'%')
         AND REPLACE(REPLACE(tms.user_ids,#{user_id},""),",", "") = tu.user_id)
-        ORDER BY tms.session_time
+        ORDER BY tms.session_time desc
     </select>
 
     <update id="updateUserIds">

@@ -262,6 +262,10 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             AND tu.user_name LIKE concat('%',#{key},'%')
         </if>
         )
+        <if test="dic_id != null  and dic_id != ''  ">
+            INNER JOIN t_user_label tul
+            ON (tu.user_id = tul.user_id AND tul.dic_id = #{dic_id})
+        </if>
         ORDER BY tuf.focus_time DESC
     </select>
 

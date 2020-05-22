@@ -38,13 +38,13 @@ public class UserFocusController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/focus_tos", method = RequestMethod.GET)
-    public Result focusTos(HttpServletRequest request, PageVO pageVO, String key){
+    public Result focusTos(HttpServletRequest request, PageVO pageVO, String key, String dic_id){
         List<UserFocusTosVO> userFocusTosVOList = new ArrayList<>();
         // 分页
         if(pageVO.getOpenPage()){
             PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
         }
-        userFocusTosVOList = userFocusService.focusTos(getLoginerId(request), key);
+        userFocusTosVOList = userFocusService.focusTos(getLoginerId(request), key, dic_id);
         ResultsPageVO resultsPageVO = ResultsPageVO.init(userFocusTosVOList, pageVO);
         return Result.getSuccResult(resultsPageVO);
     }

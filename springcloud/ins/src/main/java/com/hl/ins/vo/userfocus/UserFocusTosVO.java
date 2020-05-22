@@ -2,8 +2,6 @@ package com.hl.ins.vo.userfocus;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class UserFocusTosVO {
 
