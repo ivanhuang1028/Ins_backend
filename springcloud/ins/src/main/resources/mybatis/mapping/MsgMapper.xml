@@ -483,7 +483,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     <select id="msgsAction4" resultMap="msgActionVO">
         SELECT * FROM (
 
-            SELECT tu.user_id, tu.user_name, tu.user_icon, 3 AS 'action_type',
+            SELECT tu.user_id, tu.user_name, tu.user_icon, 4 AS 'action_type',
             result2.createtime AS 'msg_time', tt.topic_id FROM t_user tu
             INNER JOIN t_topic tt
             ON (tu.user_id = tt.topic_user )

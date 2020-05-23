@@ -477,7 +477,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </resultMap>
 
     <select id="usersInfo" resultMap="userInfoVO">
-        SELECT tu.user_id, tu.user_name, tu.user_icon, tu.user_gender, TIMESTAMPDIFF(YEAR, tu.user_birthday, CURDATE()) AS 'user_age',
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tu.user_desc, tu.user_gender, TIMESTAMPDIFF(YEAR, tu.user_birthday, CURDATE()) AS 'user_age',
         tu.user_region, (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = #{user_id} AND tt.is_valid = 1 ) AS 'user_topic_num',
         (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_to = #{user_id} ) AS 'user_focused_num',
         (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_from = #{user_id} ) AS 'user_focus_num'

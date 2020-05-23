@@ -28,6 +28,8 @@ public class Constants {
 
     public static final List<String> TOPIC_TYPES = new ArrayList<>();
 
+    public static final String GET_PHONE_CODE = "OK";
+
 
     static {
         TOPIC_TYPES.add(TOPIC_TYPE_PIC);

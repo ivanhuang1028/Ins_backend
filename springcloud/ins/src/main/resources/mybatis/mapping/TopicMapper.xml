@@ -358,7 +358,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 (SELECT COUNT(1) FROM t_topic_images tti WHERE tti.topic_id = tt.topic_id) AS 'images_total'
         FROM t_topic tt
         INNER JOIN t_user tu
-        ON (tu.user_id = tt.topic_user AND tt.is_recommend = 1)
+        ON (tu.user_id = tt.topic_user AND tt.is_recommend = 1 AND tt.is_valid = 1)
         ORDER BY recommend_time DESC)
     </select>
 

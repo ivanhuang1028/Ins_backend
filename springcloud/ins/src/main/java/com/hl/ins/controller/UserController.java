@@ -1,6 +1,14 @@
 package com.hl.ins.controller;
 
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.dypnsapi.model.v20170525.GetMobileRequest;
+import com.aliyuncs.dypnsapi.model.v20170525.GetMobileResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.profile.DefaultProfile;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
 import com.hl.common.constants.Result;
 import com.hl.common.constants.ResultCode;
 import com.hl.common.util.JwtHelper;
@@ -338,6 +346,36 @@ public class UserController extends BaseController {
                 userService.insert(tmp);
                 String jwt = JwtHelper.createJWT(tmp.getUser_name(), tmp.getUser_id(), "", "", jwtConfig.getExpDates(), jwtConfig.getEncodedKey());
                 return Result.getSuccResult(ResultCode.SUCCESS, "jwt", jwt);
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+    }
+
+    /**
+     * 登录 3. 获取手机号接口
+     * @return
+     */
+    @RequestMapping(value = "/login/getphone", method = RequestMethod.POST)
+    public Result getphone(@RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("token"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 token");
+            }
+            DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou",
+                    ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret());
+            IAcsClient client = new DefaultAcsClient(profile);
+
+            GetMobileRequest request = new GetMobileRequest();
+            request.setAccessToken(paramMap.get("token"));
+
+            GetMobileResponse response = client.getAcsResponse(request);
+            if(StringUtils.equals(response.getCode(), Constants.GET_PHONE_CODE)){
+                return Result.getSuccResult(ResultCode.SUCCESS, "phone",
+                        response.getGetMobileResultDTO().getMobile());
+            }else {
+                return Result.getFalseResult(ResultCode.FAILURE, "读取号码失败");
             }
         }catch (Exception e){
             log.error(e.getMessage());
